@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\bad.png" />
+    <None Remove="Assets\bewatec.ico" />
+    <None Remove="Assets\bewatec.png" />
+    <None Remove="Assets\closewhite.png" />
+    <None Remove="Assets\failure.png" />
+    <None Remove="Assets\good.png" />
+    <None Remove="Assets\ok.png" />
+    <None Remove="Assets\plus.png" />
+    <None Remove="Assets\right.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.1.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utillities\AutoMapperProfiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\bad.png" />
+    <Resource Include="Assets\bewatec.ico" />
+    <Resource Include="Assets\bewatec.png" />
+    <Resource Include="Assets\closewhite.png" />
+    <Resource Include="Assets\failure.png" />
+    <Resource Include="Assets\good.png" />
+    <Resource Include="Assets\ok.png" />
+    <Resource Include="Assets\plus.png" />
+    <Resource Include="Assets\right.png" />
+  </ItemGroup>
+
+</Project>
