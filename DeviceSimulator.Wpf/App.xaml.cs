@@ -2,6 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using BcsJiaer.Infrastructure.DbContexts;
 using DeviceSimulator.Infrastructure.DbContexts;
+using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Wpf.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,10 @@ namespace DeviceSimulator
                     options.UseSqlite("Data Source=device_access.db; Mode=ReadWriteCreate;").EnableDetailedErrors();
                 });
                 options.AddAutoMapper(options => options.AddMaps(Assembly.GetExecutingAssembly()));
+                options.AddLoggerBox(new LoggerBoxConfiguration
+                {
+                    MaxLine = 50
+                });
             });
             var app = builder.ConfigureContainer<ContainerBuilder>(options =>
                 options.RegisterAssemblyModules(Assembly.GetExecutingAssembly()))
@@ -41,5 +46,4 @@ namespace DeviceSimulator
             mainWindow.Show();
         }
     }
-
 }

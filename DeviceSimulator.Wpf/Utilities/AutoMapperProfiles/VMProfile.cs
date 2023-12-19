@@ -2,7 +2,7 @@
 using DeviceSimulator.Domain.Entities;
 using DeviceSimulator.Wpf.ViewModels.SubVMs;
 
-namespace DeviceSimulator.Wpf.Utillities.AutoMapperProfiles
+namespace DeviceSimulator.Wpf.Utilities.AutoMapperProfiles
 {
     public class VMProfile : Profile
     {

@@ -1,4 +1,5 @@
 ﻿using DeviceSimulator.Domain.ValueObjects.Message.Base;
+using DeviceSimulator.Infrastructure.Logger;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
@@ -11,10 +12,10 @@ namespace DeviceSimulator.Infrastructure.Mqtt
     {
         private readonly IManagedMqttClient _mqttClient;
         private ManagedMqttClientOptions _mqttClientOptions = null!;
-        private readonly ILogger<ApiMqttPub> _logger;
+        private readonly ILoggerBox<ApiMqttPub> _logger;
 
         public ApiMqttPub(
-            ILogger<ApiMqttPub> logger,
+            ILoggerBox<ApiMqttPub> logger,
             IConfiguration configuration)
         {
             _logger = logger;

@@ -5,9 +5,9 @@ using DeviceSimulator.Domain.Entities.IotData;
 using DeviceSimulator.Domain.Services;
 using DeviceSimulator.Domain.ValueObjects.Message.Base;
 using DeviceSimulator.Domain.ValueObjects.Message.JsonMsg;
+using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Infrastructure.Mqtt;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace DeviceSimulator.Infrastructure.Services
@@ -17,7 +17,7 @@ namespace DeviceSimulator.Infrastructure.Services
         public DeviceService(
             IDbContextFactory<IotDbContext> dbContextFactory,
             IMqttExplorer mqttExplorer,
-            ILogger<DeviceService> logger,
+            ILoggerBox<DeviceService> logger,
             IMapper mapper)
         {
             _iotDbContext = new Lazy<IotDbContext>(dbContextFactory.CreateDbContext());
@@ -28,7 +28,7 @@ namespace DeviceSimulator.Infrastructure.Services
 
         private readonly Lazy<IotDbContext> _iotDbContext;
         private readonly IMqttExplorer _mqttExplorer;
-        private readonly ILogger<DeviceService> _logger;
+        private readonly ILoggerBox<DeviceService> _logger;
         private readonly IMapper _mapper;
 
         public async Task<IEnumerable<Device>> GetDevicesAsync(int pageIndex = 0, int pageSize = 0)

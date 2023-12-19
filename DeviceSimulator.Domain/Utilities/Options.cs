@@ -11,7 +11,8 @@ namespace DeviceSimulator.Domain.Utilities
             PropertyNameCaseInsensitive = false,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            ReferenceHandler = ReferenceHandler.IgnoreCycles
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            WriteIndented = true,
         };
     }
 }

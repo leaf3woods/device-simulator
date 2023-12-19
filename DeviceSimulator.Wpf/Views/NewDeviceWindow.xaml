@@ -83,7 +83,7 @@
                         </Border>
 
                         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Background="PaleVioletRed" Height="35" Width="70" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                            <Button Background="PaleVioletRed" Height="35" Width="75" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                     Style="{DynamicResource buttonNormal}" Command="{Binding ApplyNewDeviceCommand}"
                                     CommandParameter="{Binding RelativeSource ={ RelativeSource AncestorType={x:Type Window}}}">
                                 <Button.Content>

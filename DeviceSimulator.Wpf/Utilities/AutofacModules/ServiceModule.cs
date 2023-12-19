@@ -2,7 +2,7 @@
 using DeviceSimulator.Domain.Services;
 using System.Reflection;
 
-namespace DeviceSimulator.Wpf.Utillities.AutofacModules
+namespace DeviceSimulator.Wpf.Utilities.AutofacModules
 {
     public class ServiceModule : Autofac.Module
     {

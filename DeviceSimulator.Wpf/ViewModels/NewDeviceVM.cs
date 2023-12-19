@@ -2,6 +2,7 @@
 using AutoMapper;
 using DeviceSimulator.Domain.Entities;
 using DeviceSimulator.Domain.Services;
+using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Wpf.ViewModels.SubVMs;
 using DeviceSimulator.Wpf.Views;
 using System.ComponentModel;
@@ -13,20 +14,25 @@ namespace DeviceSimulator.Wpf.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public RelayCommand QuitNewDeviceCommand { get; set; } = null!;
         public RelayCommand ApplyNewDeviceCommand { get; set; } = null!;
+        public RelayCommand GenerateUriCommand { get; set; } = null!;
 
         public NewDeviceVM(
             IDeviceService deviceService,
-            IMapper mapper)
+            IMapper mapper,
+            ILoggerBox<NewDeviceVM> logger)
         {
             QuitNewDeviceCommand = new RelayCommand { ExecuteAction = QuitNewDevice };
             ApplyNewDeviceCommand = new RelayCommand { ExecuteAction = ApplyNewDevice };
+            GenerateUriCommand = new RelayCommand { ExecuteAction = GenerateUri };
 
             _deviceService = deviceService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         private readonly IDeviceService _deviceService;
         private readonly IMapper _mapper;
+        private readonly ILoggerBox<NewDeviceVM> _logger;
 
         #region property binding
 
@@ -74,6 +80,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
+        
+
         #endregion
 
         public void QuitNewDevice(object sender)
@@ -84,7 +92,11 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void ApplyNewDevice(object sender)
         {
-            if(SelectedDeviceType is not null)
+            if(SelectedDeviceType is null)
+            {
+                _logger.LogWarning("device type was not selected");
+            }
+            try
             {
                 var newDevice = new DeviceGridVM
                 {
@@ -95,10 +107,26 @@ namespace DeviceSimulator.Wpf.ViewModels
                 };
                 MainWindowVM.Devices.Add(newDevice);
                 var target = _mapper.Map<Device>(newDevice);
-                var count = await _deviceService.CreateDevicesAsync(target);
                 var window = sender as NewDeviceWindow;
                 window?.Hide();
+                var count = await _deviceService.CreateDevicesAsync(target);
+                if (count > 0)
+                {
+                    _logger.LogInformation($"apply ({count}) device to database succeed");
+                }
+                else
+                {
+                    _logger.LogWarning($"apply ({count}) device to database succeed");
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError($"apply new device failed {ex}");
+            }
+        }
+
+        public void GenerateUri(object sender)
+        {
 
         }
     }

@@ -2,7 +2,7 @@
 using DeviceSimulator.Infrastructure.DbContexts;
 using DeviceSimulator.Infrastructure.Mqtt;
 
-namespace DeviceSimulator.Wpf.Utillities.AutofacModules
+namespace DeviceSimulator.Wpf.Utilities.AutofacModules
 {
     public class SingletonModule : Module
     {

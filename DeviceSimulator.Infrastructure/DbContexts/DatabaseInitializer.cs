@@ -1,4 +1,5 @@
 ﻿using BcsJiaer.Infrastructure.DbContexts;
+using DeviceSimulator.Infrastructure.Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -8,14 +9,14 @@ namespace DeviceSimulator.Infrastructure.DbContexts
     {
         public DatabaseInitializer(
             IDbContextFactory<IotDbContext> dbContextFactory,
-            ILogger<DatabaseInitializer> logger)
+            ILoggerBox<DatabaseInitializer> logger)
         {
             _dbContextFactory = dbContextFactory;
             _logger = logger;
         }
 
         private readonly IDbContextFactory<IotDbContext> _dbContextFactory;
-        private readonly ILogger<DatabaseInitializer> _logger;
+        private readonly ILoggerBox<DatabaseInitializer> _logger;
 
         public async Task Initialize()
         {
@@ -29,7 +30,7 @@ namespace DeviceSimulator.Infrastructure.DbContexts
             catch (Exception ex)
             {
                 await context.Database.EnsureCreatedAsync();
-                _logger.LogError("database initialize failed: {0}", ex);
+                _logger.LogError($"database initialize failed: {ex}");
             }
         }
     }

@@ -7,5 +7,7 @@
         public float Move { get; set; }
         public float State { get; set; }
 
+        public static readonly VitalSign Default = new();
+
     }
 }

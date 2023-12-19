@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DeviceSimulator.Domain.Entities;
 using DeviceSimulator.Domain.Services;
+using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Wpf.ViewModels.SubVMs;
 using DeviceSimulator.Wpf.Views;
 using System;
@@ -21,7 +22,8 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public ConfigureDeviceTypeVM(
             IDeviceService deviceService,
-            IMapper mapper)
+            IMapper mapper,
+            ILoggerBox<ConfigureDeviceTypeVM> logger)
         {
             QuitDeviceTypeConfigureCommand = new RelayCommand { ExecuteAction = QuitDeviceTypeConfigure };
             AddDeviceTypeCommand = new RelayCommand { ExecuteAction = AddDeviceType };
@@ -29,10 +31,12 @@ namespace DeviceSimulator.Wpf.ViewModels
 
             _deviceService = deviceService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         private readonly IDeviceService _deviceService;
         private readonly IMapper _mapper;
+        private readonly ILoggerBox<ConfigureDeviceTypeVM> _logger;
 
         #region notify property
         #endregion
@@ -40,23 +44,31 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void QuitDeviceTypeConfigure(object sender)
         {
-            var targets = new List<DeviceType>();
-            foreach (var item in MainWindowVM.DeviceTypes)
+            try
             {
-                var invalid = string.IsNullOrEmpty(item.Code) || string.IsNullOrEmpty(item.Name);
-                if (invalid)
+                var targets = new List<DeviceType>();
+                foreach (var item in MainWindowVM.DeviceTypes)
                 {
-                    MainWindowVM.DeviceTypes.Remove(item);
+                    var invalid = string.IsNullOrEmpty(item.Code) || string.IsNullOrEmpty(item.Name);
+                    if (invalid)
+                    {
+                        MainWindowVM.DeviceTypes.Remove(item);
+                    }
+                    else
+                    {
+                        var type = _mapper.Map<DeviceType>(item);
+                        targets.Add(type);
+                    }
                 }
-                else
-                {
-                    var type = _mapper.Map<DeviceType>(item);
-                    targets.Add(type);
-                }
+                var window = sender as ConfigureDeviceTypeWindow;
+                window?.Hide();
+                await _deviceService.UpdateOrAddDeviceTypesAsync([.. targets]);
+                _logger.LogInformation($"apply device types change succeed");
             }
-            var window = sender as ConfigureDeviceTypeWindow;
-            window?.Hide();
-            await _deviceService.UpdateOrAddDeviceTypesAsync([..targets]);
+            catch (Exception ex)
+            {
+                _logger.LogError($"apply device types change failed {ex}");
+            }
         }
 
         public async void AddDeviceType(object sender)
@@ -70,16 +82,24 @@ namespace DeviceSimulator.Wpf.ViewModels
         }
         public async void DeleteDeviceType(object sender)
         {
-            var types = MainWindowVM.DeviceTypes
-                .Where(dt => dt.IsChecked);
-            var codes = types
-                .Select(dt => dt.Code)
-                .ToArray();
-            foreach (var type in types)
+            try
             {
-                MainWindowVM.DeviceTypes.Remove(type);
+                var types = MainWindowVM.DeviceTypes
+                    .Where(dt => dt.IsChecked);
+                var codes = types
+                    .Select(dt => dt.Code)
+                    .ToArray();
+                foreach (var type in types)
+                {
+                    MainWindowVM.DeviceTypes.Remove(type);
+                }
+                await _deviceService.DeleteDeviceTypesAsync(codes);
+                _logger.LogError($"delete selected device types succeed");
             }
-            await _deviceService.DeleteDeviceTypesAsync(codes);
+            catch (Exception ex)
+            {
+                _logger.LogError($"delete selected device types failed {ex}");
+            }
         }
     }
 }

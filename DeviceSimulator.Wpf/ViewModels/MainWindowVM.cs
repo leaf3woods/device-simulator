@@ -3,9 +3,11 @@ using DeviceSimulator.Domain.Entities;
 using DeviceSimulator.Domain.Services;
 using DeviceSimulator.Domain.ValueObjects.Message.Base;
 using DeviceSimulator.Domain.ValueObjects.Message.JsonMsg;
+using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Infrastructure.Services;
 using DeviceSimulator.Wpf.ViewModels.SubVMs;
 using DeviceSimulator.Wpf.Views;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -34,7 +36,9 @@ namespace DeviceSimulator.Wpf.ViewModels
             NewDeviceWindow deviceWindow,
             ConfigureMessageWindow messageWindow,
             IDeviceService deviceService,
-            IMapper mapper
+            IMapper mapper,
+            ILoggerBox<MainWindowVM> logger,
+            ObservableCollection<MetaLog> logs
             )
         {
             _mqttWindow = mqttWindow;
@@ -43,6 +47,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             _messageWindow = messageWindow;
             _deviceService = deviceService;
             _mapper = mapper;
+            Logger = logger;
+            _logs = logs;
 
             QuitAppCommand = new RelayCommand() { ExecuteAction = QuitApp };
             ConfigureMqttCommand = new RelayCommand() { ExecuteAction = ConfigureMqtt };
@@ -63,13 +69,17 @@ namespace DeviceSimulator.Wpf.ViewModels
         private readonly NewDeviceWindow _deviceWindow;
         private readonly IDeviceService _deviceService;
         private readonly IMapper _mapper;
+        public ILoggerBox<MainWindowVM> Logger;
 
         #endregion command binding
 
-
-        //private static readonly string _yshelp = "13";
-
         #region property binding
+
+        private ObservableCollection<MetaLog> _logs;
+        public ObservableCollection<MetaLog> Logs
+        {
+            get => _logs;
+        }
 
         #endregion property binding
 
@@ -122,25 +132,64 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void SendMessage(object o)
         {
-            var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
-            var task = Message switch
+            try
             {
-                VitalSignMattressJsonMsg => _deviceService.SendJsonMessageAsync((Message as VitalSignMattressJsonMsg) ?? throw new ArgumentNullException(), devices),
-                _ => throw new ArgumentOutOfRangeException("message type not support")
-            };
-            await task;
+                var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
+                if (devices is null || devices.Length == 0)
+                {
+                    Logger.LogWarning($"no devices was selected");
+                    return;
+                }
+                var task = Message switch
+                {
+                    VitalSignMattressJsonMsg => _deviceService.SendJsonMessageAsync((Message as VitalSignMattressJsonMsg) ?? throw new ArgumentNullException(), devices),
+                    _ => throw new ArgumentOutOfRangeException("message type not support")
+                };
+                await task;
+                Logger.LogInformation("devices message send succeed");
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError($"devices message send failed {ex}");
+            }
         }
 
         public async void SendOffline(object o)
         {
-            var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
-            await _deviceService.SendOnlineAsync(devices);
+            try
+            {
+                var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
+                if (devices is null || devices.Length == 0)
+                {
+                    Logger.LogWarning($"no devices was selected");
+                    return;
+                }
+                await _deviceService.SendOnlineAsync(devices);
+                Logger.LogInformation($"devices({devices.Length}) offline succeed");
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError($"devices offline failed {ex}");
+            }
         }
 
         public async void SendOnline(object o)
         {
-            var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
-            await _deviceService.SendOfflineAsync(devices);
+            try
+            {
+                var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
+                if(devices is null || devices.Length == 0)
+                {
+                    Logger.LogWarning($"no devices was selected");
+                    return;
+                }
+                await _deviceService.SendOfflineAsync(devices);
+                Logger.LogInformation($"devices({devices.Length}) online succeed");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"devices online failed {ex}");
+            }
         }
 
 
