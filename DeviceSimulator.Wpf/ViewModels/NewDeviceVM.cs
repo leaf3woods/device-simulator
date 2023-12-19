@@ -127,7 +127,18 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public void GenerateUri(object sender)
         {
-
+            var maxUri = Convert.ToUInt64(MainWindowVM.Devices.MaxBy(d => d.Uri)?.Uri);
+            var uri = (ulong)0;
+            if(maxUri == 0)
+            {
+                uri = 205220410001;
+            }
+            else
+            {
+                uri = maxUri++;
+            }
+            DeviceUri = $"{uri}";
+            _logger.LogTrace($"device uri generated: {DeviceUri}");
         }
     }
 }

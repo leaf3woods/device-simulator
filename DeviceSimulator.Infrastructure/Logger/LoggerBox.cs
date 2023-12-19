@@ -24,6 +24,18 @@ namespace DeviceSimulator.Infrastructure.Logger
             get => _logs;
         }
 
+        public void LogTrace(string message)
+        {
+            var meta = new MetaLog
+            {
+                Time = TimeOnly.FromDateTime(DateTime.Now),
+                Category = typeof(TCategory).Name,
+                Content = message,
+                Level = LogLevel.Trace
+            };
+            Logs.Add(meta);
+        }
+
         public void LogInformation(string message)
         {
             var meta = new MetaLog

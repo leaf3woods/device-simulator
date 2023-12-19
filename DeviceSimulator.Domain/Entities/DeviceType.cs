@@ -18,7 +18,7 @@ namespace DeviceSimulator.Domain.Entities
         {
             Id = 1,
             Code = "10004",
-            Name = "Contactless VitalSign Monitoring Mattress"
+            Name = "mattress"
         };
 
         public static readonly DeviceType[] Seeds = [VitalSignMonitoringMattress];
