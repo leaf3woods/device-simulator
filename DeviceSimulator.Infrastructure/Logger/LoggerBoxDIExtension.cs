@@ -9,14 +9,10 @@ namespace DeviceSimulator.Infrastructure.Logger
     {
         public static void AddLoggerBox(this IServiceCollection services, LoggerBoxConfiguration configuration)
         {
-            var collection = new ObservableCollection<MetaLog>
-            {
-                MetaLog.Default
-            };
+            var collection = new ObservableCollection<MetaLog>();
             services.AddSingleton(collection);
             services.AddSingleton(configuration);
             services.AddSingleton(typeof(ILoggerBox<>), typeof(LoggerBox<>));
-
         }
     }
 }

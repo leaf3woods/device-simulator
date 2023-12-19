@@ -25,7 +25,7 @@ namespace DeviceSimulator.Infrastructure.DbContexts
             {
                 await context.Database.MigrateAsync();
                 var count = await context.SaveChangesAsync();
-                _logger.LogInformation($"scope table generate succeed, with {count} new scopes");
+                _logger.LogInformation($"database migrate succeed, with {count} changes");
             }
             catch (Exception ex)
             {

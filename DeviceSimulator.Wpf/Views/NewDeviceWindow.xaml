@@ -62,7 +62,6 @@
                                 <Border Height="25"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <TextBox Width="100" md:HintAssist.Hint="生成设备Uri..." 
-                                               md:HintAssist.HelperText="{Binding UriGenText}"
                                                Text="{Binding DeviceUri}" IsReadOnly="False"/>
                                     <Border Width="10"/>
                                     <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource singleButtonTemplate}"
