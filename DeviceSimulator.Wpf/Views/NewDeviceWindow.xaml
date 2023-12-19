@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
+        xmlns:vm="clr-namespace:DeviceSimulator.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="NewDeviceWindow" Height="330" Width="250" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" WindowStyle="None" Background="Transparent">
@@ -55,12 +56,12 @@
                                  Text="{Binding DeviceName}"/>
                                 <Border Height="20"/>
                                 <ComboBox Width="120" Height="25" 
-                                  ItemsSource="{Binding Types}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedItem="{Binding CurrentDevice}"
+                                  ItemsSource="{Binding Source={x:Static vm:MainWindowVM.DeviceTypes}}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SelectedDeviceType}"
                                   md:HintAssist.Hint="请选择设备型号..."
-                                  md:HintAssist.HelperText="将决定Payload生成规则" MaxDropDownHeight="100" />
+                                  md:HintAssist.HelperText="若不存在请添加" MaxDropDownHeight="100" />
                                 <Border Height="25"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBox md:HintAssist.Hint="生成设备Uri..." 
+                                    <TextBox Width="100" md:HintAssist.Hint="生成设备Uri..." 
                                                md:HintAssist.HelperText="{Binding UriGenText}"
                                                Text="{Binding DeviceUri}" IsReadOnly="False"/>
                                     <Border Width="10"/>
@@ -82,11 +83,11 @@
                         </Border>
 
                         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Background="PaleVioletRed" Height="35" Width="80" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                            <Button Background="PaleVioletRed" Height="35" Width="70" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                     Style="{DynamicResource buttonNormal}" Command="{Binding ApplyNewDeviceCommand}"
                                     CommandParameter="{Binding RelativeSource ={ RelativeSource AncestorType={x:Type Window}}}">
                                 <Button.Content>
-                                    <Grid Width="80">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="5*"/>
                                             <ColumnDefinition Width="8*"/>
@@ -96,7 +97,7 @@
                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/right.png"/>
                                             </Border>
                                         </Border>
-                                        <TextBlock Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="12"/>
+                                        <TextBlock Margin="5" Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="12"/>
                                     </Grid>
                                 </Button.Content>
                             </Button>

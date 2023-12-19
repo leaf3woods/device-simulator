@@ -1,4 +1,5 @@
-﻿using BcsJiaer.Infrastructure.DbContexts;
+﻿using AutoMapper;
+using BcsJiaer.Infrastructure.DbContexts;
 using DeviceSimulator.Domain.Entities;
 using DeviceSimulator.Domain.Entities.IotData;
 using DeviceSimulator.Domain.Services;
@@ -16,16 +17,19 @@ namespace DeviceSimulator.Infrastructure.Services
         public DeviceService(
             IDbContextFactory<IotDbContext> dbContextFactory,
             IMqttExplorer mqttExplorer,
-            ILogger<DeviceService> logger)
+            ILogger<DeviceService> logger,
+            IMapper mapper)
         {
             _iotDbContext = new Lazy<IotDbContext>(dbContextFactory.CreateDbContext());
             _mqttExplorer = mqttExplorer;
             _logger = logger;
+            _mapper = mapper;
         }
 
         private readonly Lazy<IotDbContext> _iotDbContext;
         private readonly IMqttExplorer _mqttExplorer;
         private readonly ILogger<DeviceService> _logger;
+        private readonly IMapper _mapper;
 
         public async Task<IEnumerable<Device>> GetDevicesAsync(int pageIndex = 0, int pageSize = 0)
         {
@@ -43,12 +47,18 @@ namespace DeviceSimulator.Infrastructure.Services
             }
         }
 
+        public async Task<IEnumerable<DeviceType>> GetDeviceTypesAsync()
+        {
+            return await _iotDbContext.Value.DeviceTypes.ToArrayAsync();
+        }
+
         public async Task<int> CreateDevicesAsync(params Device[] devices)
         {
             var uris = devices.Select(d => d.Uri);
-            var targets = await _iotDbContext.Value.Devices
-                .Where(d => uris.Contains(d.Uri))
+            var existUris = await _iotDbContext.Value.Devices
+                .Where(d => uris.Contains(d.Uri)).Select(d => d.Uri)
                 .ToArrayAsync();
+            var targets = devices.Where(d => !existUris.Contains(d.Uri)).ToArray();
             if(devices.Length != targets.Length)
             {
                 _logger.LogWarning("some devices exist, skip");
@@ -72,16 +82,35 @@ namespace DeviceSimulator.Infrastructure.Services
             return await _iotDbContext.Value.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteDeviceTypeAsync(string typeCode)
+        public async Task<int> DeleteDeviceTypesAsync(params string[] typeCodes)
         {
-            var deviceType = await _iotDbContext.Value.DeviceTypes
-                .SingleOrDefaultAsync(dt => dt.Code == typeCode);
-            if(deviceType != null)
+            var deviceTypes = await _iotDbContext.Value.DeviceTypes
+                .Where(dt => typeCodes.Contains(dt.Code))
+                .ToArrayAsync();
+            if(deviceTypes != null)
             {
-                _iotDbContext.Value.DeviceTypes.Remove(deviceType);
+                _iotDbContext.Value.DeviceTypes.RemoveRange(deviceTypes);
                 return await _iotDbContext.Value.SaveChangesAsync();
             }
             return 0;
+        }
+
+        public async Task<int> UpdateOrAddDeviceTypesAsync(params DeviceType[] deviceTypes)
+        {
+            foreach (var item in deviceTypes)
+            {
+                var type = await _iotDbContext.Value.DeviceTypes.SingleOrDefaultAsync(dt => dt.Code == item.Code);
+                if(type is null)
+                {
+                    await _iotDbContext.Value.DeviceTypes.AddAsync(item);
+                }
+                else
+                {
+                    _mapper.Map(item, type);
+                    _iotDbContext.Value.Update(type);
+                }
+            }
+            return await _iotDbContext.Value.SaveChangesAsync();           
         }
 
         public async Task SendJsonMessageAsync<TJsonMessage>(TJsonMessage message, params Device[] devices)

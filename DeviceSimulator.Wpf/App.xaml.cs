@@ -23,10 +23,14 @@ namespace DeviceSimulator
         {
             var builder = Host.CreateDefaultBuilder(e.Args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.ConfigureServices(options => options.AddPooledDbContextFactory<IotDbContext>(options =>
+            builder.ConfigureServices(options =>
             {
-                options.UseSqlite("Data Source=device_access.db; Mode=ReadWriteCreate;").EnableDetailedErrors();
-            }));
+                options.AddPooledDbContextFactory<IotDbContext>(options =>
+                {
+                    options.UseSqlite("Data Source=device_access.db; Mode=ReadWriteCreate;").EnableDetailedErrors();
+                });
+                options.AddAutoMapper(options => options.AddMaps(Assembly.GetExecutingAssembly()));
+            });
             var app = builder.ConfigureContainer<ContainerBuilder>(options =>
                 options.RegisterAssemblyModules(Assembly.GetExecutingAssembly()))
                 .Build();

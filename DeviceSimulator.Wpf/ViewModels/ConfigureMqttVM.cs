@@ -20,13 +20,13 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public void QuitMqtt(object sender)
         {
-            var window = sender as ConfigureMessageWindow;
+            var window = sender as ConfirureMqttWindow;
             window?.Hide();
         }
 
         public void ApplySettings(object sender)
         {
-            var window = sender as ConfigureMessageWindow;
+            var window = sender as ConfirureMqttWindow;
             window?.Hide();
         }
         public void UseDefaultSettings(object sender)

@@ -30,11 +30,11 @@
                             </Rectangle.Fill>
                         </Rectangle>
                         <Border Width="10" />
-                        <TextBlock Text="新建设备" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" />
+                        <TextBlock Text="Mqtt配置" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" />
                     </StackPanel>
                     <Button Margin="0,0,10,0" Height="25" Width="25" Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
-            Command="{Binding QuitNewDeviceCommand}"
-            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
+                        Command="{Binding QuitNewDeviceCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
                         <Button.Content>
                             <Image Source="/Assets/closewhite.png" Stretch="Uniform" Width="20" />
                         </Button.Content>
@@ -47,54 +47,65 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <Border Margin="10,10,10,5" Background="#F3F6F9" CornerRadius="15">
-                            <StackPanel>
-                                <TextBox Margin="10" Width="150"
-                 md:HintAssist.Hint="请输入设备名称..."
-                 md:HintAssist.HelperText="中英文，数字"
-                 Text="{Binding DeviceName}" />
-                                <Border Height="20" />
-                                <ComboBox Width="120" Height="25"
-                  ItemsSource="{Binding Types}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedItem="{Binding CurrentDevice}"
-                  md:HintAssist.Hint="请选择设备型号..."
-                  md:HintAssist.HelperText="将决定Payload生成规则" MaxDropDownHeight="100" />
-                                <Border Height="25" />
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBox md:HintAssist.Hint="生成设备Uri..."
-                               md:HintAssist.HelperText="{Binding UriGenText}"
-                               Text="{Binding DeviceUri}" IsReadOnly="False" />
-                                    <Border Width="10" />
-                                    <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource singleButtonTemplate}"
-                            Command="{Binding GenerateUriCommand}"
-                            CommandParameter="{Binding RelativeSource= {RelativeSource Mode=Self}}">
-                                        <Button.Content>
-                                            <Border BorderThickness="3" Background="#e7f3fc" Height="25" Width="25" CornerRadius="5">
-                                                <Image Width="20" Stretch="Uniform" Source="/Assets/plus.png" />
-                                            </Border>
-                                        </Button.Content>
-                                    </Button>
-                                </StackPanel>
-                                <TextBox Margin="10" Width="150"
-                 md:HintAssist.Hint="请设置设备版本号..."
-                 md:HintAssist.HelperText="格式:xxx.xxx.xxx"
-                 Text="{Binding DeviceVersion}" />
+                            <StackPanel Margin="0,-5,0,0">
+                                <TextBox Margin="5" Width="150" 
+                                         md:HintAssist.Hint="请输入IP地址..."
+                                         md:HintAssist.HelperText="{Binding IpHelperText}"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                         Text="{Binding IpAdress ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Margin="8" Width="150" 
+                                         md:HintAssist.Hint="请输入端口号..."
+                                         md:HintAssist.HelperText="{Binding PortHelperText}" 
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                         Text="{Binding Port ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Margin="8" Width="150" 
+                                         md:HintAssist.Hint="请输入登录用户名..."
+                                         md:HintAssist.HelperText="{Binding UsernameHelperText}" 
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                         Text="{Binding Username ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Margin="8" Width="150" 
+                                         md:HintAssist.Hint="请输入登录密码..."
+                                         md:HintAssist.HelperText="{Binding PasswordHelperText}"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                         Text="{Binding Password ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                         </Border>
                         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Background="PaleVioletRed" Height="35" Width="100" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
-                    Style="{DynamicResource buttonNormal}" Command="{Binding ConfirmCommand}"
-                    CommandParameter="{Binding RelativeSource ={ RelativeSource AncestorType={x:Type Window}}}">
+                            <Button Background="ForestGreen" Height="30" Width="80"
+                                    HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                    Style="{DynamicResource buttonNormal}"
+                                    Command="{Binding UseDefaultCommand }">
                                 <Button.Content>
                                     <Grid Width="80">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="5*" />
-                                            <ColumnDefinition Width="8*" />
+                                            <ColumnDefinition Width="5*"/>
+                                            <ColumnDefinition Width="8*"/>
                                         </Grid.ColumnDefinitions>
                                         <Border Grid.Column="0" Background="Transparent">
-                                            <Border BorderThickness="3" Background="DarkRed" Height="22" Width="22" CornerRadius="5">
-                                                <Image Width="20" Stretch="Uniform" Source="/Assets/right.png" />
+                                            <Border BorderThickness="3" Background="Green" Height="20" Width="20" CornerRadius="5">
+                                                <Image Width="20" Stretch="Uniform" Source="/Assets/star.png"/>
                                             </Border>
                                         </Border>
-                                        <TextBlock Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="12" />
+                                        <TextBlock Grid.Column="1" Text="默认" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+                            <Border Width="5"/>
+                            <Button Background="PaleVioletRed" Height="30" Width="80" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                    Style="{DynamicResource buttonNormal}" Command="{Binding ApplySettingCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
+                                <Button.Content>
+                                    <Grid Width="80">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*"/>
+                                            <ColumnDefinition Width="8*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="Transparent">
+                                            <Border BorderThickness="3" Background="DarkRed" Height="20" Width="20" CornerRadius="5">
+                                                <Image Width="20" Stretch="Uniform" Source="/Assets/right.png"/>
+                                            </Border>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
                                     </Grid>
                                 </Button.Content>
                             </Button>

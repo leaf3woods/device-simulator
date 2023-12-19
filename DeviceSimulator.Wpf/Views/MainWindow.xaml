@@ -5,6 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
+        xmlns:vm="clr-namespace:DeviceSimulator.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="800" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
     <Window.Effect>
@@ -30,7 +31,7 @@
                     </Rectangle>
                     <WrapPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,20,0,0">
                         <Button Background="Transparent" BorderThickness="0" 
-                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding GlobalConfigCommand}">
+                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding ConfigureMessageCommand}">
                             <Button.Content>
                                 <Image Source="/Assets/settings.png" Stretch="Uniform" Width="15"/>
                             </Button.Content>
@@ -42,7 +43,7 @@
                             </Button.Content>
                         </Button>
                         <Button Background="Transparent" BorderThickness="0"
-                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding ConfigureMessageCommand}">
+                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding ConfigureDeviceTypeCommand}">
                             <Button.Content>
                                 <Image Source="/Assets/profilewhite.png" Stretch="Uniform" Width="15"/>
                             </Button.Content>
@@ -83,7 +84,7 @@
                                             <Grid>
                                                 <Border Margin="2,0" Background="Transparent">
                                                     <Border Background="White" BorderThickness="0">
-                                                        <DataGrid ItemsSource="{Binding DeviceVMs}" Background="Transparent" 
+                                                        <DataGrid ItemsSource="{x:Static vm:MainWindowVM.Devices}" Background="Transparent" 
                                                                   VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                                                   AutoGenerateColumns="False" IsReadOnly="True" FontSize="10">
                                                             <DataGrid.Columns>
@@ -99,7 +100,7 @@
                                                                 </DataGridCheckBoxColumn>
                                                                 <DataGridTextColumn Header="名称" Binding="{Binding Name}"/>
                                                                 <DataGridTextColumn Header="Uri" Binding="{Binding Uri}"/>
-                                                                <DataGridTextColumn Header="设备类型" Binding="{Binding DeviceTypeName}"/>
+                                                                <DataGridTextColumn Header="设备类型" Binding="{Binding DeviceTypeCode}"/>
                                                                 <DataGridTextColumn Header="版本号" Binding="{Binding Version}"/>
                                                                 <DataGridTextColumn Header="状态" Binding="{Binding State}"/>
                                                             </DataGrid.Columns>

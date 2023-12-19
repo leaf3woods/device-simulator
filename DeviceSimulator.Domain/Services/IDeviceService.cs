@@ -7,13 +7,17 @@ namespace DeviceSimulator.Domain.Services
     public interface IDeviceService : IBaseService
     {
         Task<IEnumerable<Device>> GetDevicesAsync(int pageIndex = 0, int pageSize = 0);
+
+        Task<IEnumerable<DeviceType>> GetDeviceTypesAsync();
         Task<int> CreateDevicesAsync(params Device[] devices);
 
         Task<int> DeleteDevicesAsync(params string[] Uris);
 
         Task<int> CreateDeviceTypeAsync(DeviceType type);
 
-        Task<int> DeleteDeviceTypeAsync(string typeCode);
+        Task<int> DeleteDeviceTypesAsync(params string[] typeCodes);
+
+        Task<int> UpdateOrAddDeviceTypesAsync(params DeviceType[] deviceTypes);
 
         Task SendOnlineAsync(params Device[] devices);
 
