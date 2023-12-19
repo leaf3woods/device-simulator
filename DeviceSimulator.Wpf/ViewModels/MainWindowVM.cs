@@ -134,15 +134,16 @@ namespace DeviceSimulator.Wpf.ViewModels
         {
             try
             {
-                var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
-                if (devices is null || devices.Length == 0)
+                var devices = Devices.Where(d => d.IsChecked);
+                var targets = _mapper.Map<IEnumerable<Device>>(devices).ToArray();
+                if (targets is null || targets.Length == 0)
                 {
                     Logger.LogWarning($"no devices was selected");
                     return;
                 }
                 var task = Message switch
                 {
-                    VitalSignMattressJsonMsg => _deviceService.SendJsonMessageAsync((Message as VitalSignMattressJsonMsg) ?? throw new ArgumentNullException(), devices),
+                    VitalSignMattressJsonMsg => _deviceService.SendJsonMessageAsync((Message as VitalSignMattressJsonMsg) ?? throw new ArgumentNullException(), targets),
                     _ => throw new ArgumentOutOfRangeException("message type not support")
                 };
                 await task;
@@ -158,14 +159,15 @@ namespace DeviceSimulator.Wpf.ViewModels
         {
             try
             {
-                var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
-                if (devices is null || devices.Length == 0)
+                var devices = Devices.Where(d => d.IsChecked);
+                var targets = _mapper.Map<IEnumerable<Device>>(devices).ToArray();
+                if (targets is null || targets.Length == 0)
                 {
                     Logger.LogWarning($"no devices was selected");
                     return;
                 }
-                await _deviceService.SendOnlineAsync(devices);
-                Logger.LogInformation($"devices({devices.Length}) offline succeed");
+                await _deviceService.SendOnlineAsync(targets);
+                Logger.LogInformation($"devices({targets.Length}) offline succeed");
             }
             catch(Exception ex)
             {
@@ -177,14 +179,15 @@ namespace DeviceSimulator.Wpf.ViewModels
         {
             try
             {
-                var devices = _mapper.Map<IEnumerable<Device>>(Devices).ToArray();
-                if(devices is null || devices.Length == 0)
+                var devices = Devices.Where(d => d.IsChecked);
+                var targets = _mapper.Map<IEnumerable<Device>>(devices).ToArray();
+                if (targets is null || targets.Length == 0)
                 {
                     Logger.LogWarning($"no devices was selected");
                     return;
                 }
-                await _deviceService.SendOfflineAsync(devices);
-                Logger.LogInformation($"devices({devices.Length}) online succeed");
+                await _deviceService.SendOfflineAsync(targets);
+                Logger.LogInformation($"devices({targets.Length}) online succeed");
             }
             catch (Exception ex)
             {
