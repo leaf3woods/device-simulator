@@ -33,7 +33,7 @@
                         <TextBlock Text="Mqtt配置" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" />
                     </StackPanel>
                     <Button Margin="0,0,10,0" Height="25" Width="25" Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
-                        Command="{Binding QuitNewDeviceCommand}"
+                        Command="{Binding QuitMqttCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
                         <Button.Content>
                             <Image Source="/Assets/closewhite.png" Stretch="Uniform" Width="20" />
@@ -74,9 +74,9 @@
                             <Button Background="ForestGreen" Height="30" Width="80"
                                     HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                     Style="{DynamicResource buttonNormal}"
-                                    Command="{Binding UseDefaultCommand }">
+                                    Command="{Binding UseDefaultSettingsCommand }">
                                 <Button.Content>
-                                    <Grid Width="80">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="5*"/>
                                             <ColumnDefinition Width="8*"/>
@@ -92,10 +92,10 @@
                             </Button>
                             <Border Width="5"/>
                             <Button Background="PaleVioletRed" Height="30" Width="80" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
-                                    Style="{DynamicResource buttonNormal}" Command="{Binding ApplySettingCommand}"
+                                    Style="{DynamicResource buttonNormal}" Command="{Binding ApplySettingsCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
                                 <Button.Content>
-                                    <Grid Width="80">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="5*"/>
                                             <ColumnDefinition Width="8*"/>
