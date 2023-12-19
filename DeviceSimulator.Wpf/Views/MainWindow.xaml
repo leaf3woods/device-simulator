@@ -6,268 +6,245 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="280" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+        Title="MainWindow" Height="550" Width="800" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
     <Window.Effect>
         <DropShadowEffect ShadowDepth="3" Color="#FF858484" BlurRadius="10" Direction="-45" />
     </Window.Effect>
-    <Border Background="Transparent" Margin="10">
-        <Border Background="#FF37A0EA" CornerRadius="20">
-            <Grid MouseLeftButtonDown="WindowHeadDragMove">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40" />
-                    <RowDefinition Height="30*" />
-                    <RowDefinition Height="2.5*" />
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="35" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <Border Width="10" />
-                        <Rectangle Width="25" Height="25" RadiusX="5" RadiusY="5">
-                            <Rectangle.Fill>
-                                <ImageBrush ImageSource="/Assets/bewatec.png" Stretch="Uniform" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Border Width="10" />
-                        <TextBlock Text="烧入控制器" Foreground="White" FontSize="10" VerticalAlignment="Center" />
-                    </StackPanel>
-                    <Button Margin="0,0,10,0" Height="25" Width="25" Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
-                            Command="{Binding QuitAppCommand}"
+    <Border Background="Transparent" CornerRadius="20" Margin="10">
+        <Border Background="#FF37A0EA" BorderThickness="0" CornerRadius="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="15*"/>
+                </Grid.ColumnDefinitions>
+                <Grid MouseLeftButtonDown ="WindowHeadDragMove" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="15*"/>
+                        <RowDefinition Height="100*"/>
+                        <RowDefinition Height="15*"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.Row="0" Height="35" Width="35" RadiusX="10" RadiusY="10" VerticalAlignment="Bottom">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="/Assets/cat.png" Stretch="Uniform"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <WrapPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,20,0,0">
+                        <Button Background="Transparent" BorderThickness="0" 
+                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding GlobalConfigCommand}">
+                            <Button.Content>
+                                <Image Source="/Assets/settings.png" Stretch="Uniform" Width="15"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Background="Transparent" BorderThickness="0" 
+                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding ConfigureMqttCommand}">
+                            <Button.Content>
+                                <Image Source="/Assets/cloud.png" Stretch="Uniform" Width="15"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Background="Transparent" BorderThickness="0"
+                                Style="{DynamicResource menuButtonTemplate}" Command="{Binding ConfigureMessageCommand}">
+                            <Button.Content>
+                                <Image Source="/Assets/profilewhite.png" Stretch="Uniform" Width="15"/>
+                            </Button.Content>
+                        </Button>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="2" HorizontalAlignment="Center">
+                        <Button Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
+                            Command="{Binding QuitAppCommand}" 
                             CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
-                        <Button.Content>
-                            <Image Source="/Assets/closewhite.png" Stretch="Uniform" Width="20" />
-                        </Button.Content>
-                    </Button>
+                            <Button.Content>
+                                <Image Source="/Assets/closewhite.png" Stretch="Uniform" Width="20"/>
+                            </Button.Content>
+                        </Button>
+                    </WrapPanel>
                 </Grid>
-                <Border Grid.Row="1" Margin="3,0" Background="White" CornerRadius="25">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="2.2*" />
-                            <RowDefinition Height="1.5*" />
-                            <RowDefinition Height="3.0*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-                        <Border Margin="25,15,25,0" Background="#F3F6F9" CornerRadius="20">
-                            <StackPanel Margin="0,5">
-                                <Border Height="3" />
-                                <WrapPanel HorizontalAlignment="Center">
-                                    <ComboBox Width="90" Height="25"
-                                  ItemsSource="{Binding SupportedComs}" SelectedItem="{Binding SelectedCom}"
-                                  md:HintAssist.Hint="设备连接串口"
-                                  MaxDropDownHeight="100" />
-                                    <Border Width="10" />
-                                    <ComboBox Width="60" Height="25"
-                                  ItemsSource="{Binding SupportedBaudrates}" SelectedItem="{Binding SelectedBaudrate}"
-                                  md:HintAssist.Hint="波特率"
-                                  MaxDropDownHeight="100" MaxWidth="60" />
-                                </WrapPanel>
-                                <Border Height="5" />
-                                <WrapPanel Margin="15,5" HorizontalAlignment="Stretch">
-                                    <CheckBox Margin="10,0" IsChecked="{Binding IfWriteSn}" IsEnabled="True" />
-                                    <TextBox IsEnabled="{Binding IfWriteSn}" Width="115"
-                                 md:HintAssist.Hint="输入有效SN码"
-                                 Text="{Binding SerialNumber}" />
-                                    <Rectangle Width="20" Height="20" RadiusX="5" RadiusY="5" VerticalAlignment="Center">
-                                        <Rectangle.Style>
-                                            <Style TargetType="Rectangle">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IfSnPass}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IfSnPass}" Value="False">
-                                                        <Setter Property="Visibility" Value="Hidden" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Rectangle.Style>
-                                        <Rectangle.Fill>
-                                            <ImageBrush ImageSource="/Assets/good.png" Stretch="Uniform" />
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-                        <StackPanel Grid.Row="1">
-                            <WrapPanel Margin="30,5,30,2" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                <CheckBox Margin="10,0" IsChecked="{Binding IfUseConfig}" />
-                                <WrapPanel IsEnabled="{Binding IfUseConfig}">
-                                    <TextBox Margin="2"
-                                         md:HintAssist.Hint="使用配置文件烧入..." Text="{Binding FlashConfigPath}" Width="110" />
-                                    <Button VerticalAlignment="Bottom" Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource TextOnlyButton}"
-                                            Command="{Binding SelectCfgPathCommand}">
-                                        <Button.Content>
-                                            <TextBlock Height="15" Text="选择..." FontSize="11" TextDecorations="Underline" VerticalAlignment="Center" />
-                                        </Button.Content>
-                                    </Button>
-                                </WrapPanel>
-                            </WrapPanel>
-                            <WrapPanel Margin="35,2" HorizontalAlignment="Stretch">
-                                <CheckBox Margin="10,0" IsChecked="{Binding IfWriteApn}" />
-                                <TextBlock IsEnabled="{Binding IfWriteApn}" Width="70"
-                                Text="烧入APN..." FontSize="11.5" VerticalAlignment="Center" Margin="2" />
-                                <Button IsEnabled="{Binding IfWriteApn}" VerticalAlignment="Bottom" Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource TextOnlyButton}"
-                                            Command="{Binding ApnConfigCommand}">
-                                    <Button.Content>
-                                        <TextBlock Height="15" Text="配置..." FontSize="11" TextDecorations="Underline" VerticalAlignment="Center" />
-                                    </Button.Content>
-                                </Button>
-                                <Border Width="5" />
-                                <Rectangle Width="20" Height="20" RadiusX="5" RadiusY="5" VerticalAlignment="Center">
-                                    <Rectangle.Style>
-                                        <Style TargetType="Rectangle">
-                                            <Style.Triggers>
-                                                <!--<DataTrigger Binding="{Binding IfApnConfigured, Source ={ x:Static local:Common.Instance}, Mode= OneWay, NotifyOnSourceUpdated=True}" Value="True">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IfApnConfigured, Source ={ x:Static local:Common.Instance}, Mode= OneWay, NotifyOnSourceUpdated=True}" Value="False">
-                                                    <Setter Property="Visibility" Value="Hidden" />
-                                                </DataTrigger>-->
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Rectangle.Style>
-                                    <Rectangle.Fill>
-                                        <ImageBrush ImageSource="/Assets/ok.png" Stretch="Uniform" />
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                            </WrapPanel>
-                        </StackPanel>
-                        <Border Grid.Row="2" Margin="25,6" Background="#e7f3fc" CornerRadius="20">
-                            <StackPanel IsEnabled="{Binding IfNotUseConfig}">
-                                <WrapPanel Margin="10,6" HorizontalAlignment="Stretch">
-                                    <CheckBox Margin="10,0" IsChecked="{Binding IfWriteHost}" />
-                                    <WrapPanel IsEnabled="{Binding IfWriteHost}">
-                                        <TextBox  Width="80"
-                                        md:HintAssist.Hint="服务器Ip"
-                                        Text="{Binding MqttServer}" />
-                                        <TextBlock Text=" : " VerticalAlignment="Bottom" />
-                                        <TextBox Width="30"
-                                             md:HintAssist.Hint="Port"
-                                             Text="{Binding MqttPort}" />
-                                        <Rectangle Width="20" Height="20" RadiusX="5" RadiusY="5" VerticalAlignment="Center">
-                                            <Rectangle.Style>
-                                                <Style TargetType="Rectangle">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IfHostPass}" Value="True">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IfHostPass}" Value="False">
-                                                            <Setter Property="Visibility" Value="Hidden" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Rectangle.Style>
-                                            <Rectangle.Fill>
-                                                <ImageBrush ImageSource="/Assets/good.png" Stretch="Uniform" />
-                                            </Rectangle.Fill>
-                                        </Rectangle>
-                                    </WrapPanel>
-                                </WrapPanel>
-                                <WrapPanel Margin="10,5" HorizontalAlignment="Stretch">
-                                    <CheckBox Margin="10,0" IsChecked="{Binding IfWriteUserName}" />
-                                    <TextBox IsEnabled="{Binding IfWriteUserName}" Width="120"
-                                 md:HintAssist.Hint="Mqtt用户名"
-                                 Text="{Binding MqttUserName}" />
-                                    <Rectangle Width="20" Height="20" RadiusX="5" RadiusY="5" VerticalAlignment="Center">
-                                        <Rectangle.Style>
-                                            <Style TargetType="Rectangle">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IfUserNamePass}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IfUserNamePass}" Value="False">
-                                                        <Setter Property="Visibility" Value="Hidden" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Rectangle.Style>
-                                        <Rectangle.Fill>
-                                            <ImageBrush ImageSource="/Assets/good.png" Stretch="Uniform" />
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                </WrapPanel>
-                                <WrapPanel Margin="10,5" HorizontalAlignment="Stretch">
-                                    <CheckBox Margin="10,0" IsChecked="{Binding IfWritePassword}" />
-                                    <TextBox IsEnabled="{Binding IfWritePassword}" Width="120"
-                                 md:HintAssist.Hint="Mqtt密码"
-                                 Text="{Binding MqttPassword}" />
-                                    <Rectangle Width="20" Height="20" RadiusX="5" RadiusY="5" VerticalAlignment="Center">
-                                        <Rectangle.Style>
-                                            <Style TargetType="Rectangle">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IfPasswordPass}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IfPasswordPass}" Value="False">
-                                                        <Setter Property="Visibility" Value="Hidden" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Rectangle.Style>
-                                        <Rectangle.Fill>
-                                            <ImageBrush ImageSource="/Assets/good.png" Stretch="Uniform" />
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-                        <Border Grid.Row="3" CornerRadius="15">
-                            <StackPanel>
-                                <DockPanel Margin="3" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                    <Button Background="PaleVioletRed" Height="30" Width="85" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
-                                    Style="{DynamicResource buttonNormal}" Command="{Binding WriteInCommand}">
-                                        <Button.Content>
-                                            <Grid Width="80">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="5*" />
-                                                    <ColumnDefinition Width="8*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Border Grid.Column="0" Background="Transparent">
-                                                    <Border BorderThickness="3" Background="DarkRed" Height="22" Width="22" CornerRadius="5">
-                                                        <Image Width="20" Stretch="Uniform" Source="/Assets/right.png" />
+                <Border Grid.Column="1" Background="Transparent" Margin="3">
+                    <Border Background="White" CornerRadius ="15">
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="#F3F6F9" CornerRadius="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25*"/>
+                                        <RowDefinition Height="40"/>
+                                        <RowDefinition Height="10*"/>
+                                    </Grid.RowDefinitions>
+                                    <TabControl MouseLeftButtonDown ="WindowHeadDragMove"
+                                                Foreground="#FF37A0EA" Grid.Row="0" Margin="8,8,8,5"
+                                                TabStripPlacement="Top"  HorizontalContentAlignment="Left">
+                                        <TabItem Background="#FF37A0EA" HorizontalAlignment="Left" Height="40">
+                                            <TabItem.Header>
+                                                <TextBlock Text="设备列表" Foreground="Black" FontWeight="Normal" FontSize="14"/>
+                                            </TabItem.Header>
+
+                                            <Grid>
+                                                <Border Margin="2,0" Background="Transparent">
+                                                    <Border Background="White" BorderThickness="0">
+                                                        <DataGrid ItemsSource="{Binding DeviceVMs}" Background="Transparent" 
+                                                                  VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                                                                  AutoGenerateColumns="False" IsReadOnly="True" FontSize="10">
+                                                            <DataGrid.Columns>
+                                                                <DataGridCheckBoxColumn Binding="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
+                                                                    <DataGridCheckBoxColumn.Header>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <!--<CheckBox HorizontalAlignment="Left" 
+                                                                                      IsChecked="{Binding DataContext.IsAllItemsChecked ,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged
+                                                                                                    ,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"/>
+                                                                            <TextBlock Text="全选" VerticalAlignment="Center"/>-->
+                                                                        </StackPanel>
+                                                                    </DataGridCheckBoxColumn.Header>
+                                                                </DataGridCheckBoxColumn>
+                                                                <DataGridTextColumn Header="名称" Binding="{Binding Name}"/>
+                                                                <DataGridTextColumn Header="Uri" Binding="{Binding Uri}"/>
+                                                                <DataGridTextColumn Header="设备类型" Binding="{Binding DeviceTypeName}"/>
+                                                                <DataGridTextColumn Header="版本号" Binding="{Binding Version}"/>
+                                                                <DataGridTextColumn Header="状态" Binding="{Binding State}"/>
+                                                            </DataGrid.Columns>
+                                                        </DataGrid>
                                                     </Border>
                                                 </Border>
-                                                <TextBlock Grid.Column="1" Text="烧入已选" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10" />
                                             </Grid>
-                                        </Button.Content>
-                                    </Button>
-                                    <Button Background="Transparent" VerticalContentAlignment="Center" Style="{DynamicResource TextOnlyButton}"
-                                            Command="{Binding ResetStateCommand}">
-                                        <Button.Content>
-                                            <TextBlock Text="数据复位" FontSize="12" VerticalAlignment="Bottom" TextDecorations="Underline" />
-                                        </Button.Content>
-                                    </Button>
-                                </DockPanel>
+                                        </TabItem>
+                                    </TabControl>
+                                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,5,10,5" Orientation="Horizontal">
+                                        <Button Background="CornflowerBlue" Height="30" Width="80"
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                                Style="{DynamicResource buttonNormal}"
+                                                Command="{Binding AddDeviceCommand}">
+                                            <Button.Content>
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="6*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Background="Transparent">
+                                                        <Border BorderThickness="3" Background="#2B88C9" Height="20" Width="20" CornerRadius="5">
+                                                            <Image Width="20" Stretch="Uniform" Source="/Assets/plus.png"/>
+                                                        </Border>
+                                                    </Border>
+                                                    <TextBlock Margin="5" Grid.Column="2" Text="Add" TextAlignment="Left" 
+                                                               VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"
+                                                               HorizontalAlignment="Center"/>
+                                                </Grid>
+                                            </Button.Content>
+                                        </Button>
+                                        <Border Width="5"/>
+                                        <Button Background="ForestGreen" Height="30" Width="80" 
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                                Style="{DynamicResource buttonNormal}"
+                                                Command="{Binding SendOnlineCommand}">
+                                            <Button.Content>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="8*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Background="Transparent">
+                                                        <Border BorderThickness="3" Background="Green" Height="20" Width="20" CornerRadius="5">
+                                                            <Image Width="20" Stretch="Uniform" Source="/Assets/play.png"/>
+                                                        </Border>
+                                                    </Border>
+                                                    <TextBlock Margin="5" Grid.Column="1" Text="Online" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                                </Grid>
+                                            </Button.Content>
+                                        </Button>
+                                        <Border Width="5"/>
+                                        <Button Background="#ff9746" Height="30" Width="80" 
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                                Style="{DynamicResource buttonNormal}"
+                                                Command="{Binding SendOfflineCommand}">
+                                            <Button.Content>
+                                                <Grid Margin="3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2.5*"/>
+                                                        <ColumnDefinition Width="8*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Background="Transparent">
+                                                        <Border BorderThickness="3" Background="#ff5d34" Height="20" Width="20" CornerRadius="5">
+                                                            <Image Width="20" Stretch="Uniform" Source="/Assets/recent.png"/>
+                                                        </Border>
+                                                    </Border>
+                                                    <TextBlock Grid.Column="1" Margin="5" Text="Offline" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                                </Grid>
+                                            </Button.Content>
+                                        </Button>
+                                        <Border Width="5"/>
+                                        <Button Background="MediumPurple" Height="30" Width="80" 
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                                Style="{DynamicResource buttonNormal}"
+                                                Command="{Binding SendMessageCommand}">
+                                            <Button.Content>
+                                                <Grid Margin="3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="3*"/>
+                                                        <ColumnDefinition Width="8*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Background="Transparent">
+                                                        <Border BorderThickness="3" Background="Purple" Height="20" Width="20" CornerRadius="5">
+                                                            <Image Width="20" Stretch="Uniform" Source="/Assets/notifwhite.png"/>
+                                                        </Border>
+                                                    </Border>
+                                                    <TextBlock Margin="5" Grid.Column="1" Text="Send" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                                </Grid>
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                    <Border Margin="10,5" Grid.Row="2" Background="Transparent">
+                                        <Border  Background="#e7f3fc" CornerRadius="15">
+                                            <StackPanel>
+                                                <TextBlock Margin="20,5,5,5" Text="日志" FontWeight="Bold" FontSize="12"/>
+                                                <Border Margin="5,0,5,0" Background="White" CornerRadius="10">
+                                                    <ListBox ItemsSource="{Binding ConsoleTexts}">
+                                                        <ListBox.ItemContainerStyle>
+                                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ConsoleColor}" Value="0">
+                                                                        <DataTrigger.Setters>
+                                                                            <Setter Property="Foreground" Value ="Gray"/>
+                                                                        </DataTrigger.Setters>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding ConsoleColor}" Value="1">
+                                                                        <DataTrigger.Setters>
+                                                                            <Setter Property="Foreground" Value ="Red"/>
+                                                                        </DataTrigger.Setters>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding ConsoleColor}" Value="2">
+                                                                        <DataTrigger.Setters>
+                                                                            <Setter Property="Foreground" Value ="Orange"/>
+                                                                        </DataTrigger.Setters>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ListBox.ItemContainerStyle>
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding ConsoleText}" Height="14" FontSize="12"/>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+                                    </Border>
+
+                                </Grid>
+                            </Border>
+
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="8,15,10,10" Orientation="Vertical">
+                                <Border Background="#e7f3fc" CornerRadius="5">
+                                    <TextBlock Margin="5,5,0,5" Foreground="Black" FontWeight="Bold" FontSize="17">History</TextBlock>
+                                </Border>
                             </StackPanel>
-                        </Border>
-                    </Grid>
+
+                        </Grid>
+                    </Border>
                 </Border>
-                <WrapPanel Grid.Row="3">
-                    <TextBlock Margin="30,6" Text="{Binding HelperInfo}" FontSize="10" HorizontalAlignment="Stretch">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding InfoColor}" Value="0">
-                                        <DataTrigger.Setters>
-                                            <Setter Property="Foreground" Value ="White" />
-                                        </DataTrigger.Setters>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding InfoColor}" Value="1">
-                                        <DataTrigger.Setters>
-                                            <Setter Property="Foreground" Value ="OrangeRed" />
-                                        </DataTrigger.Setters>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding InfoColor}" Value="2">
-                                        <DataTrigger.Setters>
-                                            <Setter Property="Foreground" Value ="Green" />
-                                        </DataTrigger.Setters>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </WrapPanel>
+
+
             </Grid>
         </Border>
     </Border>

@@ -1,0 +1,113 @@
+﻿<Window x:Class="DeviceSimulator.Wpf.Views.NewDeviceWindow"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
+        mc:Ignorable="d"
+        Title="NewDeviceWindow" Height="330" Width="250" AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner" WindowStyle="None" Background="Transparent">
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="10" Color="#FF858484" Direction="-45" ShadowDepth="3"/>
+    </Window.Effect>
+    <Border Background="Transparent" Margin="10">
+        <Border Background="#FF37A0EA" CornerRadius="15">
+            <Grid Margin="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="35"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="25" Margin="12,0,0,0" Height="25" RadiusX="5" RadiusY="5" MouseLeftButtonDown="WindowHeadDragMove">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/Assets/cat.png" Stretch="Uniform"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Border Width="10"/>
+                        <TextBlock Text="新建设备" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10"/>
+                    </StackPanel>
+                    <Button Margin="0,0,10,0" Height="25" Width="25" Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
+                            Command="{Binding QuitNewDeviceCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
+                        <Button.Content>
+                            <Image Source="/Assets/closewhite.png" Stretch="Uniform" Width="20"/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="2" Background="White" CornerRadius="15">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Border Margin="10,10,10,5" Background="#F3F6F9" CornerRadius="15">
+                            <StackPanel>
+                                <TextBox Margin="10" Width="150" 
+                                 md:HintAssist.Hint="请输入设备名称..."
+                                 md:HintAssist.HelperText="中英文，数字" 
+                                 Text="{Binding DeviceName}"/>
+                                <Border Height="20"/>
+                                <ComboBox Width="120" Height="25" 
+                                  ItemsSource="{Binding Types}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedItem="{Binding CurrentDevice}"
+                                  md:HintAssist.Hint="请选择设备型号..."
+                                  md:HintAssist.HelperText="将决定Payload生成规则" MaxDropDownHeight="100" />
+                                <Border Height="25"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBox md:HintAssist.Hint="生成设备Uri..." 
+                                               md:HintAssist.HelperText="{Binding UriGenText}"
+                                               Text="{Binding DeviceUri}" IsReadOnly="False"/>
+                                    <Border Width="10"/>
+                                    <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource singleButtonTemplate}"
+                                            Command="{Binding GenerateUriCommand}" 
+                                            CommandParameter="{Binding RelativeSource= {RelativeSource Mode=Self}}">
+                                        <Button.Content>
+                                            <Border BorderThickness="3" Background="#e7f3fc" Height="25" Width="25" CornerRadius="5">
+                                                <Image Width="20" Stretch="Uniform" Source="/Assets/plus.png"/>
+                                            </Border>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                                <TextBox Margin="10" Width="150" 
+                                 md:HintAssist.Hint="请设置设备版本号..."
+                                 md:HintAssist.HelperText="格式:xxx.xxx.xxx" 
+                                 Text="{Binding DeviceVersion}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button Background="PaleVioletRed" Height="35" Width="80" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                                    Style="{DynamicResource buttonNormal}" Command="{Binding ApplyNewDeviceCommand}"
+                                    CommandParameter="{Binding RelativeSource ={ RelativeSource AncestorType={x:Type Window}}}">
+                                <Button.Content>
+                                    <Grid Width="80">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*"/>
+                                            <ColumnDefinition Width="8*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="Transparent">
+                                            <Border BorderThickness="3" Background="DarkRed" Height="22" Width="22" CornerRadius="5">
+                                                <Image Width="20" Stretch="Uniform" Source="/Assets/right.png"/>
+                                            </Border>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="12"/>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--<Border Grid.Row="1" BorderThickness="3">
+                    <TextBlock Foreground="Black" Text="{Binding TxtContent, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Left"/>
+                </Border>-->
+            </Grid>
+        </Border>
+    </Border>
+</Window>

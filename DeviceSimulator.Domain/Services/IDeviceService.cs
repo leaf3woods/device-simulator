@@ -4,9 +4,9 @@ using DeviceSimulator.Domain.ValueObjects.Message.Base;
 
 namespace DeviceSimulator.Domain.Services
 {
-    public interface IDeviceService
+    public interface IDeviceService : IBaseService
     {
-        Task<IEnumerable<Device>> GetDevicesAsync(int pageIndex, int pageSize);
+        Task<IEnumerable<Device>> GetDevicesAsync(int pageIndex = 0, int pageSize = 0);
         Task<int> CreateDevicesAsync(params Device[] devices);
 
         Task<int> DeleteDevicesAsync(params string[] Uris);

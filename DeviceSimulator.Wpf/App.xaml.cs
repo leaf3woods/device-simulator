@@ -1,6 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BcsJiaer.Infrastructure.DbContexts;
+using DeviceSimulator.Infrastructure.DbContexts;
 using DeviceSimulator.Wpf.Views;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;
@@ -20,9 +23,15 @@ namespace DeviceSimulator
         {
             var builder = Host.CreateDefaultBuilder(e.Args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            builder.ConfigureServices(options => options.AddPooledDbContextFactory<IotDbContext>(options =>
+            {
+                options.UseSqlite("Data Source=device_access.db; Mode=ReadWriteCreate;").EnableDetailedErrors();
+            }));
             var app = builder.ConfigureContainer<ContainerBuilder>(options =>
                 options.RegisterAssemblyModules(Assembly.GetExecutingAssembly()))
                 .Build();
+            var init = app.Services.GetRequiredService<DatabaseInitializer>();
+            init?.Initialize().Wait();
             //  若要注入main window, 需要在app.xaml中删除startup uri, 由host通过依赖注入获取窗口并启动
             var mainWindow = app.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();

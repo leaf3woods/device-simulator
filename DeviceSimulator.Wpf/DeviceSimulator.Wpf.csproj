@@ -10,14 +10,30 @@
 
   <ItemGroup>
     <None Remove="Assets\bad.png" />
+    <None Remove="Assets\bell.png" />
     <None Remove="Assets\bewatec.ico" />
     <None Remove="Assets\bewatec.png" />
+    <None Remove="Assets\cat.png" />
     <None Remove="Assets\closewhite.png" />
+    <None Remove="Assets\cloud.png" />
     <None Remove="Assets\failure.png" />
     <None Remove="Assets\good.png" />
+    <None Remove="Assets\notifwhite.png" />
     <None Remove="Assets\ok.png" />
+    <None Remove="Assets\play.png" />
     <None Remove="Assets\plus.png" />
+    <None Remove="Assets\profilewhite.png" />
+    <None Remove="Assets\recent.png" />
     <None Remove="Assets\right.png" />
+    <None Remove="Assets\settings.png" />
+    <None Remove="Assets\star.png" />
+    <None Remove="Assets\todobw.png" />
+    <None Remove="Assets\todocolor.png" />
+    <None Remove="Assets\trash.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\bell.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,15 +48,31 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DeviceSimulator.Domain\DeviceSimulator.Domain.csproj" />
+    <ProjectReference Include="..\DeviceSimulator.Infrastructure\DeviceSimulator.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\bad.png" />
     <Resource Include="Assets\bewatec.ico" />
     <Resource Include="Assets\bewatec.png" />
+    <Resource Include="Assets\cat.png" />
     <Resource Include="Assets\closewhite.png" />
+    <Resource Include="Assets\cloud.png" />
     <Resource Include="Assets\failure.png" />
     <Resource Include="Assets\good.png" />
+    <Resource Include="Assets\notifwhite.png" />
     <Resource Include="Assets\ok.png" />
+    <Resource Include="Assets\play.png" />
     <Resource Include="Assets\plus.png" />
+    <Resource Include="Assets\profilewhite.png" />
+    <Resource Include="Assets\recent.png" />
     <Resource Include="Assets\right.png" />
+    <Resource Include="Assets\settings.png" />
+    <Resource Include="Assets\star.png" />
+    <Resource Include="Assets\todobw.png" />
+    <Resource Include="Assets\todocolor.png" />
+    <Resource Include="Assets\trash.png" />
   </ItemGroup>
 
 </Project>

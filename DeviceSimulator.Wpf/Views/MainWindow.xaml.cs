@@ -9,12 +9,9 @@ namespace DeviceSimulator.Wpf.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindowVM MainVm { get; set; } = null!;
-
         public MainWindow(MainWindowVM mainVm)
         {
-            MainVm = mainVm;
-            this.DataContext = MainVm;
+            this.DataContext = mainVm;
             InitializeComponent();
         }
 

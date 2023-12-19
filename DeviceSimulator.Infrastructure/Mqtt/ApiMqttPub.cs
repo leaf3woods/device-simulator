@@ -10,7 +10,7 @@ namespace DeviceSimulator.Infrastructure.Mqtt
     public class ApiMqttPub : IMqttExplorer
     {
         private readonly IManagedMqttClient _mqttClient;
-        private ManagedMqttClientOptions _mqttClientOptions;
+        private ManagedMqttClientOptions _mqttClientOptions = null!;
         private readonly ILogger<ApiMqttPub> _logger;
 
         public ApiMqttPub(
@@ -18,13 +18,19 @@ namespace DeviceSimulator.Infrastructure.Mqtt
             IConfiguration configuration)
         {
             _logger = logger;
-            var mqtt = configuration.GetConnectionString("Mqtt")!.Split(':');
+            var mqttFactory = new MqttFactory();
+            _mqttClient = mqttFactory.CreateManagedMqttClient();
+            _mqttClient.DisconnectedAsync += async _ =>
+                await Task.Run(() => { _logger.LogError("mqtt disconnected"); });
+        }
 
+        public async Task StartAsync(string server, int port, string username, string password)
+        {
             _mqttClientOptions = new ManagedMqttClientOptionsBuilder()
                 .WithAutoReconnectDelay(TimeSpan.FromSeconds(10))
                 .WithClientOptions(new MqttClientOptionsBuilder()
-                    .WithTcpServer(mqtt[0], Convert.ToInt32(mqtt[1]))
-                    .WithCredentials(mqtt[2], mqtt[3])
+                    .WithTcpServer(server, port)
+                    .WithCredentials(username, password)
                     .WithKeepAlivePeriod(TimeSpan.FromSeconds(10))
                     .WithWillQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
                     .WithWillTopic(TopicBuilder.CreateBuilder()
@@ -36,14 +42,6 @@ namespace DeviceSimulator.Infrastructure.Mqtt
                     .WithCleanSession()
                     .Build())
                 .Build();
-            var mqttFactory = new MqttFactory();
-            _mqttClient = mqttFactory.CreateManagedMqttClient();
-            _mqttClient.DisconnectedAsync += async _ =>
-                await Task.Run(() => { _logger.LogError("mqtt disconnected"); });
-        }
-
-        public async Task StartAsync()
-        {
             await _mqttClient.StartAsync(_mqttClientOptions);
         }
 

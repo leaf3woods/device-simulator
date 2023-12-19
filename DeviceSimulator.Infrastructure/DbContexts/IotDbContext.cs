@@ -8,6 +8,7 @@ namespace BcsJiaer.Infrastructure.DbContexts
     {
         public IotDbContext(DbContextOptions<IotDbContext> options) : base(options)
         {
+            //
         }
 
         #region dbsets

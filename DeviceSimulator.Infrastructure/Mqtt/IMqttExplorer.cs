@@ -2,7 +2,7 @@
 {
     public interface IMqttExplorer
     {
-        Task StartAsync();
+        Task StartAsync(string server, int port, string username, string password);
 
         Task StopAsync();
 

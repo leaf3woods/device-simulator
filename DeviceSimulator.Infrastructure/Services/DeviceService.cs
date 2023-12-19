@@ -45,7 +45,15 @@ namespace DeviceSimulator.Infrastructure.Services
 
         public async Task<int> CreateDevicesAsync(params Device[] devices)
         {
-            await _iotDbContext.Value.Devices.AddRangeAsync(devices);
+            var uris = devices.Select(d => d.Uri);
+            var targets = await _iotDbContext.Value.Devices
+                .Where(d => uris.Contains(d.Uri))
+                .ToArrayAsync();
+            if(devices.Length != targets.Length)
+            {
+                _logger.LogWarning("some devices exist, skip");
+            }
+            await _iotDbContext.Value.Devices.AddRangeAsync(targets);
             return await _iotDbContext.Value.SaveChangesAsync();
         }
 
@@ -85,8 +93,9 @@ namespace DeviceSimulator.Infrastructure.Services
             }
             else
             {
+                var exists = await SelectExistDevice(devices);
                 var bytes = Encoding.UTF8.GetBytes(message.Raw!);
-                await Parallel.ForEachAsync(devices, async (d, _) =>
+                await Parallel.ForEachAsync(exists, async (d, _) =>
                 {
                     await _mqttExplorer.PublishAsync(
                         IotTopicBuilder.CreateBuilder()
@@ -103,7 +112,8 @@ namespace DeviceSimulator.Infrastructure.Services
         public async Task SendBinaryMessageAsync<TBinaryMessage>(TBinaryMessage message, params Device[] devices)
             where TBinaryMessage : BinaryMessage, IAsJsonNode
         {
-            await Parallel.ForEachAsync(devices, async (d, _) =>
+            var exists = await SelectExistDevice(devices);
+            await Parallel.ForEachAsync(exists, async (d, _) =>
             {
                 await _mqttExplorer.PublishAsync(
                     IotTopicBuilder.CreateBuilder()
@@ -119,13 +129,14 @@ namespace DeviceSimulator.Infrastructure.Services
 
         public async Task SendOfflineAsync(params Device[] devices)
         {
+            var exists = await SelectExistDevice(devices);
             var state = new DeviceState
             {
                 Connected = 0,
             };
             var offline = new DeviceStateMsg(state);
             var bytes = Encoding.UTF8.GetBytes(offline.Raw!);
-            await Parallel.ForEachAsync(devices, async (d, _) =>
+            await Parallel.ForEachAsync(exists, async (d, _) =>
             {
                 await _mqttExplorer.PublishAsync(
                     IotTopicBuilder.CreateBuilder()
@@ -141,13 +152,14 @@ namespace DeviceSimulator.Infrastructure.Services
 
         public async Task SendOnlineAsync(params Device[] devices)
         {
+            var exists = await SelectExistDevice(devices);
             var state = new DeviceState
             {
                 Connected = 1,
             };
             var offline = new DeviceStateMsg(state);
             var bytes = Encoding.UTF8.GetBytes(offline.Raw!);
-            await Parallel.ForEachAsync(devices, async (d, _) =>
+            await Parallel.ForEachAsync(exists, async (d, _) =>
             {
                 await _mqttExplorer.PublishAsync(
                     IotTopicBuilder.CreateBuilder()
@@ -159,6 +171,23 @@ namespace DeviceSimulator.Infrastructure.Services
                     bytes);
             });
             _logger.LogInformation($"device online succeed");
+        }
+
+        private async Task<IEnumerable<Device>> SelectExistDevice(params Device[] devices)
+        {
+            var uris = devices.Select(d => d.Uri).ToArray();
+            var exists = await _iotDbContext.Value.Devices
+                .Where(d => uris.Contains(d.Uri))
+                .ToArrayAsync();
+            if (exists.Length == devices.Length)
+            {
+                _logger.LogInformation("all devices[] are exist");
+            }
+            if (exists.Length == 0)
+            {
+                _logger.LogWarning("devices not exist");
+            }
+            return exists;
         }
     }
 }
