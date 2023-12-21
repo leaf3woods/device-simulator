@@ -46,8 +46,8 @@
                             <RowDefinition Height="5*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <Border Margin="10,10,10,5" Background="#F3F6F9" CornerRadius="15">
-                            <StackPanel Margin="0,-5,0,0">
+                        <Border Margin="5" Background="#F3F6F9" CornerRadius="15">
+                            <StackPanel Margin="0,5">
                                 <TextBox Margin="5" Width="150" 
                                          md:HintAssist.Hint="请输入IP地址..."
                                          md:HintAssist.HelperText="{Binding IpHelperText}"
@@ -63,11 +63,10 @@
                                          md:HintAssist.HelperText="{Binding UsernameHelperText}" 
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
                                          Text="{Binding Username ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Margin="8" Width="150" 
+                                <PasswordBox Margin="8" Width="150" 
                                          md:HintAssist.Hint="请输入登录密码..."
                                          md:HintAssist.HelperText="{Binding PasswordHelperText}"
-                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
-                                         Text="{Binding Password ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
+                                         Style="{StaticResource MaterialDesignPasswordBox}" />
                             </StackPanel>
                         </Border>
                         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">

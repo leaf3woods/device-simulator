@@ -96,6 +96,10 @@ namespace DeviceSimulator.Wpf.ViewModels
             {
                 _logger.LogWarning("device type was not selected");
             }
+            if(MainWindowVM.Devices.Any(d=>d.Uri == DeviceUri))
+            {
+                _logger.LogWarning("device uri already exist");
+            }
             try
             {
                 var newDevice = new DeviceGridVM
@@ -128,16 +132,15 @@ namespace DeviceSimulator.Wpf.ViewModels
         public void GenerateUri(object sender)
         {
             var maxUri = Convert.ToUInt64(MainWindowVM.Devices.MaxBy(d => d.Uri)?.Uri);
-            var uri = (ulong)0;
             if(maxUri == 0)
             {
-                uri = 205220410001;
+                maxUri = 205220410001;
             }
             else
             {
-                uri = maxUri++;
+                maxUri++;
             }
-            DeviceUri = $"{uri}";
+            DeviceUri = $"{maxUri}";
             _logger.LogTrace($"device uri generated: {DeviceUri}");
         }
     }
