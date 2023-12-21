@@ -4,12 +4,7 @@ using DeviceSimulator.Domain.Services;
 using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Wpf.ViewModels.SubVMs;
 using DeviceSimulator.Wpf.Views;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeviceSimulator.Wpf.ViewModels
 {
@@ -42,7 +37,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         #endregion
 
 
-        public async void QuitDeviceTypeConfigure(object sender)
+        public async void QuitDeviceTypeConfigure(object? sender)
         {
             try
             {
@@ -71,7 +66,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        public async void AddDeviceType(object sender)
+        public async void AddDeviceType(object? sender)
         {
             // do something
             MainWindowVM.DeviceTypes.Add(new DeviceTypeVM
@@ -80,7 +75,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             });
             await Task.Delay(3 * 100);
         }
-        public async void DeleteDeviceType(object sender)
+        public async void DeleteDeviceType(object? sender)
         {
             try
             {

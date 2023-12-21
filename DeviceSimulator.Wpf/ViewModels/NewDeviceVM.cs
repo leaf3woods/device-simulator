@@ -84,13 +84,13 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         #endregion
 
-        public void QuitNewDevice(object sender)
+        public void QuitNewDevice(object? sender)
         {
             var window = sender as NewDeviceWindow;
             window?.Hide();
         }
 
-        public async void ApplyNewDevice(object sender)
+        public async void ApplyNewDevice(object? sender)
         {
             if(SelectedDeviceType is null)
             {
@@ -129,7 +129,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        public void GenerateUri(object sender)
+        public void GenerateUri(object? sender)
         {
             var maxUri = Convert.ToUInt64(MainWindowVM.Devices.MaxBy(d => d.Uri)?.Uri);
             if(maxUri == 0)

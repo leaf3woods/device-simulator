@@ -11,17 +11,17 @@ namespace DeviceSimulator.Wpf.ViewModels
         {
             if (CanExecuteFunc == null)
                 return true;
-            return CanExecuteFunc(parameter ?? new object());
+            return CanExecuteFunc(parameter);
         }
 
         public void Execute(object? parameter)
         {
             if (ExecuteAction == null)
                 return;
-            ExecuteAction(parameter ?? new object());
+            ExecuteAction(parameter);
         }
 
-        public Func<object, bool>? CanExecuteFunc { get; set; }
-        public Action<object>? ExecuteAction { get; set; }
+        public Func<object?, bool>? CanExecuteFunc { get; set; }
+        public Action<object?>? ExecuteAction { get; set; }
     }
 }

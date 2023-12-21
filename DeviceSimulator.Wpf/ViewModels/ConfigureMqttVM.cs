@@ -138,13 +138,13 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         #endregion
 
-        public void QuitMqtt(object sender)
+        public void QuitMqtt(object? sender)
         {
             var window = sender as ConfigureMqttWindow;
             window?.Hide();
         }
 
-        public void ApplySettings(object sender)
+        public void ApplySettings(object? sender)
         {
             var ipPass = string.IsNullOrEmpty(IpAddress);
             var portPass = Port is not null && (Port>=0 && Port<=65536);
@@ -169,7 +169,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                 window?.Hide();
             }
         }
-        public void UseDefaultSettings(object sender)
+        public void UseDefaultSettings(object? sender)
         {
             IpAddress = DefaultIpAddress;
             Port = DefaultPort;

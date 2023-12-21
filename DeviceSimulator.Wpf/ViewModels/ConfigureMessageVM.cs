@@ -59,13 +59,13 @@ namespace DeviceSimulator.Wpf.ViewModels
         public const string Json = "json";
         public const string Binary = "binary";
 
-        public void QuitMessageConfigure(object sender)
+        public void QuitMessageConfigure(object? sender)
         {
             var window = sender as ConfigureMessageWindow;
             window?.Hide();
         }
 
-        public void ApplyMessageSettings(object sender)
+        public void ApplyMessageSettings(object? sender)
         {
             if (string.IsNullOrEmpty(_textBoxContent))
             {
@@ -90,7 +90,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             var window = sender as ConfigureMessageWindow;
             window?.Hide();
         }
-        public void UseDefaultMessageSettings(object sender)
+        public void UseDefaultMessageSettings(object? sender)
         {
             TextBoxContent = TemplateJson;
         }

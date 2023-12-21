@@ -121,41 +121,41 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         #region command method
 
-        public void QuitApp(object o)
+        public void QuitApp(object? sender)
         {
             Application.Current.Shutdown();
         }
 
-        public void ConfigureMqtt(object o)
+        public void ConfigureMqtt(object? sender)
         {
             _mqttWindow.ShowDialog();
             _mqttWindow.Activate();
         }
 
-        public void ConfigureMessage(object o)
+        public void ConfigureMessage(object? sender)
         {
             _messageWindow.ShowDialog();
             _messageWindow.Activate();
         }
 
-        public void AddDevice(object o)
+        public void AddDevice(object? sender)
         {
             _deviceWindow.ShowDialog();
             _deviceWindow.Activate();
         }
 
-        public async void DeleteDevice(object o)
+        public async void DeleteDevice(object? sender)
         {
             await _deviceService.DeleteDevicesAsync();
         }
 
-        public void ConfigureDeviceType(object o)
+        public void ConfigureDeviceType(object? sender)
         {
             _deviceTypeWindow.ShowDialog();
             _deviceTypeWindow.Activate();
         }
 
-        public async void SendMessage(object o)
+        public async void SendMessage(object? sender)
         {
             //AppendNewHistoryMsg(0, ConfigureMessageVM.TemplateJson);
             try
@@ -191,7 +191,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        public async void SendOffline(object o)
+        public async void SendOffline(object? sender)
         {
             try
             {
@@ -211,7 +211,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        public async void SendOnline(object o)
+        public async void SendOnline(object? sender)
         {
             try
             {
