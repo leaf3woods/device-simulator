@@ -6,20 +6,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\cat.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\bad.png" />
     <None Remove="Assets\bell.png" />
-    <None Remove="Assets\bewatec.ico" />
-    <None Remove="Assets\bewatec.png" />
     <None Remove="Assets\cat.png" />
     <None Remove="Assets\closewhite.png" />
     <None Remove="Assets\cloud.png" />
-    <None Remove="Assets\failure.png" />
-    <None Remove="Assets\good.png" />
     <None Remove="Assets\notifwhite.png" />
-    <None Remove="Assets\ok.png" />
     <None Remove="Assets\play.png" />
     <None Remove="Assets\plus.png" />
     <None Remove="Assets\profilewhite.png" />
@@ -30,6 +25,10 @@
     <None Remove="Assets\todobw.png" />
     <None Remove="Assets\todocolor.png" />
     <None Remove="Assets\trash.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\cat.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,16 +54,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\bad.png" />
-    <Resource Include="Assets\bewatec.ico" />
-    <Resource Include="Assets\bewatec.png" />
     <Resource Include="Assets\cat.png" />
     <Resource Include="Assets\closewhite.png" />
     <Resource Include="Assets\cloud.png" />
-    <Resource Include="Assets\failure.png" />
-    <Resource Include="Assets\good.png" />
     <Resource Include="Assets\notifwhite.png" />
-    <Resource Include="Assets\ok.png" />
     <Resource Include="Assets\play.png" />
     <Resource Include="Assets\plus.png" />
     <Resource Include="Assets\profilewhite.png" />
