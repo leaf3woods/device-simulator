@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DeviceSimulator.Wpf.Views
 {
     /// <summary>
-    /// ConfirureMqttWindow.xaml 的交互逻辑
+    /// ConfigureMqttWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class ConfirureMqttWindow : Window
+    public partial class ConfigureMqttWindow : Window
     {
-        public ConfirureMqttWindow(ConfigureMqttVM configureMqttVM)
+        public ConfigureMqttWindow(ConfigureMqttVM configureMqttVM)
         {
             this.DataContext = configureMqttVM;
             InitializeComponent();

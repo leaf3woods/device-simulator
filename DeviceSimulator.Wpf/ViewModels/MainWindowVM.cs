@@ -31,7 +31,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         public RelayCommand SendOnlineCommand { get; set; } = null!;
 
         public MainWindowVM(
-            ConfirureMqttWindow mqttWindow,
+            ConfigureMqttWindow mqttWindow,
             ConfigureDeviceTypeWindow deviceTypeWindow,
             NewDeviceWindow deviceWindow,
             ConfigureMessageWindow messageWindow,
@@ -63,7 +63,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             DataInitialize();
         }
 
-        private readonly ConfirureMqttWindow _mqttWindow;
+        private readonly ConfigureMqttWindow _mqttWindow;
         private readonly ConfigureMessageWindow _messageWindow;
         private readonly ConfigureDeviceTypeWindow _deviceTypeWindow;
         private readonly NewDeviceWindow _deviceWindow;
