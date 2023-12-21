@@ -33,10 +33,7 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Trace
             };
-            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
-            {
-                Logs.Add(meta);
-            }));
+            LogWithMeta(meta);
         }
 
         public void LogInformation(string message)
@@ -48,10 +45,7 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Information
             };
-            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
-            {
-                Logs.Add(meta);
-            }));
+            LogWithMeta(meta);
         }
 
         public void LogWarning(string message)
@@ -63,10 +57,7 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Warning
             };
-            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
-            {
-                Logs.Add(meta);
-            }));
+            LogWithMeta(meta);
         }
 
         public void LogError(string message)
@@ -78,10 +69,20 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Error
             };
+            LogWithMeta(meta);
+        }
+
+        private void LogWithMeta(MetaLog meta)
+        {
+
             Application.Current.Dispatcher.InvokeAsync((Action)(() =>
             {
+                if (_logs.Count == _configuration.MaxLine)
+                {
+                    _logs.RemoveAt(0);
+                }
                 Logs.Add(meta);
-            }));       
+            }));
         }
     }
 }
