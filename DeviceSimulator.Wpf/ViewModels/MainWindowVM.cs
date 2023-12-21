@@ -157,14 +157,7 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void SendMessage(object o)
         {
-            //if (_lastMessageLength != 0)
-            //{
-            //    MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
-            //}
-            //MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T}:--------->");
-            //MessageHistoryBuilder.AppendLine(ConfigureMessageVM.TemplateJson);
-            //MessageHistoryBuilder.Append(string.Empty);
-            //_lastMessageLength = ConfigureMessageVM.TemplateJson.Length + 2;
+            //AppendNewHistoryMsg(0, ConfigureMessageVM.TemplateJson);
             try
             {
                 var devices = Devices.Where(d => d.IsChecked);
@@ -180,28 +173,14 @@ namespace DeviceSimulator.Wpf.ViewModels
                         var json = (VitalSignMattressJsonMsg)Message;
                         await _deviceService.SendJsonMessageAsync(json, targets);
                         Logger.LogInformation("devices message send succeed");
-                        if(_lastMessageLength != 0)
-                        {
-                            MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
-                        }
-                        MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T}:--------->");
-                        MessageHistoryBuilder.AppendLine(json.Raw);
-                        MessageHistoryBuilder.Append(string.Empty);
-                        _lastMessageLength = json.Raw?.Length + 2 ?? 0;
+                        AppendNewHistoryMsg(targets.Length, json.Raw);
                         break;
                     case VitalSignMattressBinMsg:
                         var bin = (VitalSignMattressBinMsg)Message!;
                         await _deviceService.SendBinaryMessageAsync(bin, targets);
                         Logger.LogInformation("devices message send succeed");
-                        if (_lastMessageLength != 0)
-                        {
-                            MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
-                        }
-                        MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T}:--------->");
                         var plain = Convert.ToHexString(bin.FrameData);
-                        MessageHistoryBuilder.AppendLine(plain);
-                        MessageHistoryBuilder.Append(string.Empty);
-                        _lastMessageLength = plain?.Length + 2 ?? 0;
+                        AppendNewHistoryMsg(targets.Length, plain);
                         break;
                     default: throw new ArgumentOutOfRangeException("message type not support");
                 }
@@ -288,6 +267,18 @@ namespace DeviceSimulator.Wpf.ViewModels
                 ConfigureMqttVM.DefaultIpAddress, ConfigureMqttVM.DefaultPort,
                 ConfigureMqttVM.DefaultUsername, ConfigureMqttVM.DefaultPassword);
             Logger.LogTrace($"trying connect to mqtt server({ConfigureMqttVM.DefaultIpAddress}:{ConfigureMqttVM.DefaultPort})...");
+        }
+
+        private void AppendNewHistoryMsg(int count, string? msg)
+        {
+            if (_lastMessageLength != 0)
+            {
+                MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
+            }
+            MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T} [{count}] devs:");
+            MessageHistoryBuilder.AppendLine(msg);
+            MessageHistoryBuilder.Append(string.Empty);
+            _lastMessageLength = msg?.Length + 2 ?? 0;
         }
     }
 }
