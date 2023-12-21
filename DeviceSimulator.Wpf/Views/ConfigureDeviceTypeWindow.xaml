@@ -7,14 +7,14 @@
         xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
         xmlns:vm="clr-namespace:DeviceSimulator.Wpf.ViewModels"
         mc:Ignorable="d"
-        Title="ConfigureDeviceTypeWindow" Height="350" Width="250"
+        Title="ConfigureDeviceTypeWindow" Height="360" Width="300"
         AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterOwner"
         Background="Transparent">
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" Color="#FF858484" Direction="-45" ShadowDepth="3"/>
     </Window.Effect>
     <Border Background="Transparent" Margin="10">
-        <Border Background="#FF37A0EA" CornerRadius="15">
+        <Border Background="#FF37A0EA" CornerRadius="20">
             <Grid Margin="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35"/>
@@ -43,14 +43,14 @@
                         </Button.Content>
                     </Button>
                 </Grid>
-                <Border Grid.Row="2" Background="White" CornerRadius="15">
+                <Border Grid.Row="2" Background="White" CornerRadius="20">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="5.5*"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <Border Margin="10,10,10,5" Background="#F3F6F9" CornerRadius="15">
-                            <DataGrid AllowDrop="False" ItemsSource="{x:Static vm:MainWindowVM.DeviceTypes}" Background="Transparent"
+                        <Border Margin="5" Background="#F3F6F9" CornerRadius="20">
+                            <DataGrid Margin="5,0,5,10" AllowDrop="False" ItemsSource="{x:Static vm:MainWindowVM.DeviceTypes}" Background="Transparent"
                                       AutoGenerateColumns="False" >
                                 <DataGrid.Columns>
                                     <DataGridCheckBoxColumn Header="选择" Binding="{Binding IsChecked}"/>
@@ -78,7 +78,7 @@
                                     </Grid>
                                 </Button.Content>
                             </Button>
-                            <Border Width="10"/>
+                            <Border Width="30"/>
                             <Button Background="PaleVioletRed" Height="30" Width="70" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                     Style="{DynamicResource buttonNormal}" Command="{Binding DeleteDeviceTypeCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
