@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DeviceSimulator.Domain.Entities;
 using DeviceSimulator.Domain.Services;
+using DeviceSimulator.Domain.ValueObjects.Message;
 using DeviceSimulator.Domain.ValueObjects.Message.Base;
 using DeviceSimulator.Domain.ValueObjects.Message.JsonMsg;
 using DeviceSimulator.Infrastructure.Logger;
@@ -11,6 +12,7 @@ using DeviceSimulator.Wpf.Views;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text;
 using System.Windows;
 
 namespace DeviceSimulator.Wpf.ViewModels
@@ -87,6 +89,22 @@ namespace DeviceSimulator.Wpf.ViewModels
             get => _logs;
         }
 
+        private StringBuilder _messageHistoryBuilder = new();
+
+        public string MessageHistory
+        {
+            get => _messageHistoryBuilder.ToString();
+        }
+
+        public StringBuilder MessageHistoryBuilder
+        {
+            get
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MessageHistory)));
+                return _messageHistoryBuilder;
+            }
+        }
+
         #endregion property binding
 
         #region static field
@@ -98,6 +116,8 @@ namespace DeviceSimulator.Wpf.ViewModels
         public static ObservableCollection<DeviceTypeVM> DeviceTypes { get; set; } = [];
 
         #endregion
+
+        private int _lastMessageLength;
 
         #region command method
 
@@ -137,6 +157,14 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void SendMessage(object o)
         {
+            //if (_lastMessageLength != 0)
+            //{
+            //    MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
+            //}
+            //MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T}:--------->");
+            //MessageHistoryBuilder.AppendLine(ConfigureMessageVM.TemplateJson);
+            //MessageHistoryBuilder.Append(string.Empty);
+            //_lastMessageLength = ConfigureMessageVM.TemplateJson.Length + 2;
             try
             {
                 var devices = Devices.Where(d => d.IsChecked);
@@ -146,13 +174,37 @@ namespace DeviceSimulator.Wpf.ViewModels
                     Logger.LogWarning($"no devices was selected");
                     return;
                 }
-                var task = Message switch
+                switch (Message)
                 {
-                    VitalSignMattressJsonMsg => _deviceService.SendJsonMessageAsync((Message as VitalSignMattressJsonMsg) ?? throw new ArgumentNullException(), targets),
-                    _ => throw new ArgumentOutOfRangeException("message type not support")
-                };
-                await task;
-                Logger.LogInformation("devices message send succeed");
+                    case VitalSignMattressJsonMsg:
+                        var json = (VitalSignMattressJsonMsg)Message;
+                        await _deviceService.SendJsonMessageAsync(json, targets);
+                        Logger.LogInformation("devices message send succeed");
+                        if(_lastMessageLength != 0)
+                        {
+                            MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
+                        }
+                        MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T}:--------->");
+                        MessageHistoryBuilder.AppendLine(json.Raw);
+                        MessageHistoryBuilder.Append(string.Empty);
+                        _lastMessageLength = json.Raw?.Length + 2 ?? 0;
+                        break;
+                    case VitalSignMattressBinMsg:
+                        var bin = (VitalSignMattressBinMsg)Message!;
+                        await _deviceService.SendBinaryMessageAsync(bin, targets);
+                        Logger.LogInformation("devices message send succeed");
+                        if (_lastMessageLength != 0)
+                        {
+                            MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
+                        }
+                        MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T}:--------->");
+                        var plain = Convert.ToHexString(bin.FrameData);
+                        MessageHistoryBuilder.AppendLine(plain);
+                        MessageHistoryBuilder.Append(string.Empty);
+                        _lastMessageLength = plain?.Length + 2 ?? 0;
+                        break;
+                    default: throw new ArgumentOutOfRangeException("message type not support");
+                }
             }
             catch(Exception ex)
             {

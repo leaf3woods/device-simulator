@@ -246,17 +246,24 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="8,15,10,10" Orientation="Vertical">
+                            <StackPanel Grid.Column="1" VerticalAlignment="Stretch" Margin="8,15,10,10" Orientation="Vertical">
                                 <Border Background="#e7f3fc" CornerRadius="5">
                                     <TextBlock Margin="5,5,0,5" Foreground="Black" FontWeight="Bold" FontSize="17">History</TextBlock>
                                 </Border>
+                                <Border Height="10"/>
+                                <Border Background="LightYellow" Height="450" CornerRadius="10" VerticalAlignment="Stretch" >
+                                    <RichTextBox Margin="5" IsReadOnly="True">
+                                        <FlowDocument>
+                                            <Paragraph>
+                                                <Run Text="{Binding MessageHistory, Mode=OneWay}"/>
+                                            </Paragraph>
+                                        </FlowDocument>
+                                    </RichTextBox>
+                                </Border>
                             </StackPanel>
-
                         </Grid>
                     </Border>
                 </Border>
-
-
             </Grid>
         </Border>
     </Border>

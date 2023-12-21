@@ -55,7 +55,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         }
         #endregion
 
-        public static string templateJson = JsonSerializer.Serialize(VitalSign.Default, Options.CustomJsonSerializerOptions);
+        public static string TemplateJson = JsonSerializer.Serialize(VitalSign.Default, Options.CustomJsonSerializerOptions);
         public const string Json = "json";
         public const string Binary = "binary";
 
@@ -92,7 +92,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         }
         public void UseDefaultMessageSettings(object sender)
         {
-            TextBoxContent = templateJson;
+            TextBoxContent = TemplateJson;
         }
 
     }
