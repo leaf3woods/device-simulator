@@ -88,7 +88,7 @@
                                             <RowDefinition Height="5*"/>
                                         </Grid.RowDefinitions>
                                         <Border Margin="10,10,420,5" Grid.Row="0" Background="#e7f3fc" CornerRadius="10">
-                                            <TextBlock Margin="10" Foreground="Black" VerticalAlignment ="Center" FontWeight="Bold" FontSize="18" FontStyle="Italic">Device View</TextBlock>
+                                            <TextBlock Margin="10" Foreground="Black" VerticalAlignment ="Center" FontWeight="ExtraBold" FontSize="18" FontStyle="Italic">Device View</TextBlock>
                                         </Border>
                                         <Border Grid.Row="1" Margin="10,2" Background="White" CornerRadius="10" BorderThickness="0">
                                             <DataGrid Margin="5,0" ItemsSource="{x:Static vm:MainWindowVM.Devices}" Background="Transparent" 

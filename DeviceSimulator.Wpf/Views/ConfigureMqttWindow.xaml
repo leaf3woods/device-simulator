@@ -106,7 +106,7 @@
                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/star.png"/>
                                             </Border>
                                         </Border>
-                                        <TextBlock Grid.Column="1" Text="默认" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                        <TextBlock Margin="5" Grid.Column="1" Text="默认" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
                                     </Grid>
                                 </Button.Content>
                             </Button>
@@ -125,7 +125,7 @@
                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/right.png"/>
                                             </Border>
                                         </Border>
-                                        <TextBlock Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                        <TextBlock Grid.Column="1" Margin="5" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
                                     </Grid>
                                 </Button.Content>
                             </Button>
