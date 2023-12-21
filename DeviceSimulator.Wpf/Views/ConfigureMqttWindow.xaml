@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:util="clr-namespace:DeviceSimulator.Wpf.Utilities"
         mc:Ignorable="d"
-        Title="ConfirureMqttWindow" Height="330" Width="250" AllowsTransparency="True"
+        Title="ConfirureMqttWindow" Height="340" Width="250" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" WindowStyle="None" Background="Transparent">
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" Color="#FF858484" Direction="-45" ShadowDepth="3" />
     </Window.Effect>
     <Border Background="Transparent" Margin="10">
-        <Border Background="#FF37A0EA" CornerRadius="10">
+        <Border Background="#FF37A0EA" CornerRadius="15">
             <Grid Margin="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35" />
@@ -43,11 +44,12 @@
                 <Border Grid.Row="2" Background="White" CornerRadius="15">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="5.5*" />
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <Border Margin="5" Background="#F3F6F9" CornerRadius="15">
                             <StackPanel>
+                                <Border Height="5"/>
                                 <TextBox Width="150" 
                                          md:HintAssist.Hint="请输入IP地址..."
                                          md:HintAssist.HelperText="{Binding IpHelperText}"
@@ -64,13 +66,24 @@
                                          md:HintAssist.Hint="请输入登录用户名..."
                                          md:HintAssist.HelperText="{Binding UsernameHelperText}" 
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
-                                         Text="{Binding Username ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
-                                <Border Height="15"/>
-                                <PasswordBox Width="150"
-                                         md:HintAssist.Hint="请输入登录密码..."
-                                         md:HintAssist.HelperText="{Binding PasswordHelperText}"
-                                         Style="{StaticResource MaterialDesignPasswordBox}" />
-                                <Border Height="15"/>
+                                         Text="{Binding Username,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                <Border Height="10"/>
+                                <Grid>
+                                    <PasswordBox Width="150"
+                                            md:HintAssist.HelperText="请输入登录密码..."
+                                            Style="{StaticResource MaterialDesignPasswordBox}" 
+                                            Visibility="{Binding PasswordBoxVisibility}"
+                                            util:PasswordExtension.Attach="True" 
+                                            util:PasswordExtension.Password="{Binding Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Width="150" 
+                                            md:HintAssist.HelperText="请输入登录密码..."
+                                            Visibility="{Binding TextBoxVisibility}"
+                                            Style="{StaticResource MaterialDesignTextBox}"
+                                            Text="{Binding Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                    </TextBox>
+                                </Grid>
+
+                                <Border Height="30"/>
                                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                     <CheckBox Content="记住密码" IsChecked="{Binding SavePassword}"/>
                                     <Border Width="10"/>

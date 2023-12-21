@@ -1,6 +1,7 @@
 ﻿
 using DeviceSimulator.Wpf.Views;
 using System.ComponentModel;
+using System.Windows;
 
 namespace DeviceSimulator.Wpf.ViewModels
 {
@@ -24,8 +25,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        private int _port;
-        public int Port
+        private int? _port;
+        public int? Port
         {
             get => _port;
             set
@@ -57,7 +58,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        private bool _showPassword;
+        private bool _showPassword = false;
         public bool ShowPassword
         {
             get => _showPassword;
@@ -65,7 +66,18 @@ namespace DeviceSimulator.Wpf.ViewModels
             {
                 _showPassword = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowPassword)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TextBoxVisibility)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PasswordBoxVisibility)));
             }
+        }
+
+        public Visibility TextBoxVisibility
+        {
+            get => _showPassword ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public Visibility PasswordBoxVisibility
+        {
+            get => _showPassword ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private bool _savePassword;
