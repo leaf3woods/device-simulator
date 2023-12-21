@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DeviceSimulator.Infrastructure.Logger;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
+using System.Windows;
 
-namespace DeviceSimulator.Infrastructure.Logger
+namespace DeviceSimulator.Wpf.Logger
 {
     public class LoggerBox<TCategory> : ILoggerBox<TCategory>
     {
@@ -33,7 +33,10 @@ namespace DeviceSimulator.Infrastructure.Logger
                 Content = message,
                 Level = LogLevel.Trace
             };
-            Logs.Add(meta);
+            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                Logs.Add(meta);
+            }));
         }
 
         public void LogInformation(string message)
@@ -45,7 +48,10 @@ namespace DeviceSimulator.Infrastructure.Logger
                 Content = message,
                 Level = LogLevel.Information
             };
-            Logs.Add(meta);
+            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                Logs.Add(meta);
+            }));
         }
 
         public void LogWarning(string message)
@@ -57,7 +63,10 @@ namespace DeviceSimulator.Infrastructure.Logger
                 Content = message,
                 Level = LogLevel.Warning
             };
-            Logs.Add(meta);
+            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                Logs.Add(meta);
+            }));
         }
 
         public void LogError(string message)
@@ -69,7 +78,10 @@ namespace DeviceSimulator.Infrastructure.Logger
                 Content = message,
                 Level = LogLevel.Error
             };
-            Logs.Add(meta);
+            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
+            {
+                Logs.Add(meta);
+            }));       
         }
     }
 }

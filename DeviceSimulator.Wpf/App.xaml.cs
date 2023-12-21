@@ -3,13 +3,11 @@ using Autofac.Extensions.DependencyInjection;
 using BcsJiaer.Infrastructure.DbContexts;
 using DeviceSimulator.Infrastructure.DbContexts;
 using DeviceSimulator.Infrastructure.Logger;
+using DeviceSimulator.Wpf.Logger;
 using DeviceSimulator.Wpf.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Configuration;
-using System.Data;
-using System.DirectoryServices.ActiveDirectory;
 using System.Reflection;
 using System.Windows;
 

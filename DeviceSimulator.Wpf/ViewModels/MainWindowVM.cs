@@ -4,6 +4,7 @@ using DeviceSimulator.Domain.Services;
 using DeviceSimulator.Domain.ValueObjects.Message.Base;
 using DeviceSimulator.Domain.ValueObjects.Message.JsonMsg;
 using DeviceSimulator.Infrastructure.Logger;
+using DeviceSimulator.Infrastructure.Mqtt;
 using DeviceSimulator.Infrastructure.Services;
 using DeviceSimulator.Wpf.ViewModels.SubVMs;
 using DeviceSimulator.Wpf.Views;
@@ -38,7 +39,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             IDeviceService deviceService,
             IMapper mapper,
             ILoggerBox<MainWindowVM> logger,
-            ObservableCollection<MetaLog> logs
+            ObservableCollection<MetaLog> logs,
+            IMqttExplorer mqttExplorer
             )
         {
             _mqttWindow = mqttWindow;
@@ -49,6 +51,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             _mapper = mapper;
             Logger = logger;
             _logs = logs;
+            _mqttExplorer = mqttExplorer;
 
             QuitAppCommand = new RelayCommand() { ExecuteAction = QuitApp };
             ConfigureMqttCommand = new RelayCommand() { ExecuteAction = ConfigureMqtt };
@@ -60,7 +63,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             SendOfflineCommand = new RelayCommand() { ExecuteAction = SendOffline };
             SendOnlineCommand = new RelayCommand() { ExecuteAction = SendOnline };
 
-            DataInitialize();
+            DataInitializeAsync();
+            StartMqttAsync();
         }
 
         private readonly ConfigureMqttWindow _mqttWindow;
@@ -69,6 +73,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         private readonly NewDeviceWindow _deviceWindow;
         private readonly IDeviceService _deviceService;
         private readonly IMapper _mapper;
+        private readonly IMqttExplorer _mqttExplorer;
         public ILoggerBox<MainWindowVM> Logger;
 
         #endregion command binding
@@ -195,8 +200,9 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
+        #endregion command method
 
-        private async void DataInitialize()
+        private async void DataInitializeAsync()
         {
             var devices = (await _deviceService.GetDevicesAsync())
             .Select(d => new DeviceGridVM
@@ -223,13 +229,13 @@ namespace DeviceSimulator.Wpf.ViewModels
                 DeviceTypes.Add(item);
             }
         }
-        #endregion command method
-    }
 
-    public enum ColorIndex
-    {
-        White,
-        Red,
-        Green,
+        private async void StartMqttAsync()
+        {
+            await _mqttExplorer.StartAsync(
+                ConfigureMqttVM.DefaultIpAddress, ConfigureMqttVM.DefaultPort,
+                ConfigureMqttVM.DefaultUsername, ConfigureMqttVM.DefaultPassword);
+            Logger.LogInformation($"mqtt start succeed({ConfigureMqttVM.DefaultIpAddress}:{ConfigureMqttVM.DefaultPort})");
+        }
     }
 }

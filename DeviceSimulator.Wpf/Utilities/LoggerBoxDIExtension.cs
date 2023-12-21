@@ -1,9 +1,8 @@
-﻿
-
+﻿using DeviceSimulator.Infrastructure.Logger;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 
-namespace DeviceSimulator.Infrastructure.Logger
+namespace DeviceSimulator.Wpf.Logger
 {
     public static class LoggerBoxDIExtension
     {

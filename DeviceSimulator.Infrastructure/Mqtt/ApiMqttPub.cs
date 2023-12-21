@@ -21,8 +21,12 @@ namespace DeviceSimulator.Infrastructure.Mqtt
             _logger = logger;
             var mqttFactory = new MqttFactory();
             _mqttClient = mqttFactory.CreateManagedMqttClient();
-            _mqttClient.DisconnectedAsync += async _ =>
-                await Task.Run(() => { _logger.LogError("mqtt disconnected"); });
+            _mqttClient.DisconnectedAsync += _ =>
+            {
+                _logger.LogError("mqtt disconnected");
+                return Task.CompletedTask;
+            };
+               
         }
 
         public async Task StartAsync(string server, int port, string username, string password)

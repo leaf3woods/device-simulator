@@ -49,25 +49,24 @@
                         </Grid.RowDefinitions>
                         <Border Margin="5" Background="#F3F6F9" CornerRadius="15">
                             <StackPanel>
-                                <Border Height="5"/>
                                 <TextBox Width="150" 
                                          md:HintAssist.Hint="请输入IP地址..."
-                                         md:HintAssist.HelperText="{Binding IpHelperText}"
+                                         md:HintAssist.HelperText="{Binding IpAddressHint}"
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
                                          Text="{Binding IpAddress ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
-                                <Border Height="10"/>
+                                <Border Height="15"/>
                                 <TextBox Width="150" 
                                          md:HintAssist.Hint="请输入端口号..."
-                                         md:HintAssist.HelperText="{Binding PortHelperText}" 
+                                         md:HintAssist.HelperText="{Binding PortHint}" 
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
                                          Text="{Binding Port ,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>
-                                <Border Height="10"/>
+                                <Border Height="15"/>
                                 <TextBox Width="150" 
                                          md:HintAssist.Hint="请输入登录用户名..."
-                                         md:HintAssist.HelperText="{Binding UsernameHelperText}" 
+                                         md:HintAssist.HelperText="{Binding UsernameHint}" 
                                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
                                          Text="{Binding Username,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                <Border Height="10"/>
+                                <Border Height="15"/>
                                 <Grid>
                                     <PasswordBox Width="150"
                                             md:HintAssist.HelperText="请输入登录密码..."
@@ -83,7 +82,7 @@
                                     </TextBox>
                                 </Grid>
 
-                                <Border Height="30"/>
+                                <Border Height="25"/>
                                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                     <CheckBox Content="记住密码" IsChecked="{Binding SavePassword}"/>
                                     <Border Width="10"/>
