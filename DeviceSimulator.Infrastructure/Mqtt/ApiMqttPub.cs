@@ -1,7 +1,5 @@
 ﻿using DeviceSimulator.Domain.ValueObjects.Message.Base;
 using DeviceSimulator.Infrastructure.Logger;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
@@ -15,8 +13,7 @@ namespace DeviceSimulator.Infrastructure.Mqtt
         private readonly ILoggerBox<ApiMqttPub> _logger;
 
         public ApiMqttPub(
-            ILoggerBox<ApiMqttPub> logger,
-            IConfiguration configuration)
+            ILoggerBox<ApiMqttPub> logger)
         {
             _logger = logger;
             var mqttFactory = new MqttFactory();
@@ -24,6 +21,11 @@ namespace DeviceSimulator.Infrastructure.Mqtt
             _mqttClient.DisconnectedAsync += _ =>
             {
                 _logger.LogError("mqtt disconnected");
+                return Task.CompletedTask;
+            };
+            _mqttClient.ConnectedAsync += _ =>
+            {
+                _logger.LogInformation("mqtt connected");
                 return Task.CompletedTask;
             };
                

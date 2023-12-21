@@ -74,7 +74,6 @@ namespace DeviceSimulator.Wpf.Logger
 
         private void LogWithMeta(MetaLog meta)
         {
-
             Application.Current.Dispatcher.InvokeAsync((Action)(() =>
             {
                 if (_logs.Count == _configuration.MaxLine)

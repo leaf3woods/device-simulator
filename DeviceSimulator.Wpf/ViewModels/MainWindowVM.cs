@@ -11,6 +11,7 @@ using DeviceSimulator.Wpf.Views;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 
 namespace DeviceSimulator.Wpf.ViewModels
 {
@@ -102,8 +103,7 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public void QuitApp(object o)
         {
-            var window = o as System.Windows.Window;
-            window?.Close();
+            Application.Current.Shutdown();
         }
 
         public void ConfigureMqtt(object o)
@@ -235,7 +235,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             await _mqttExplorer.StartAsync(
                 ConfigureMqttVM.DefaultIpAddress, ConfigureMqttVM.DefaultPort,
                 ConfigureMqttVM.DefaultUsername, ConfigureMqttVM.DefaultPassword);
-            Logger.LogInformation($"mqtt start succeed({ConfigureMqttVM.DefaultIpAddress}:{ConfigureMqttVM.DefaultPort})");
+            Logger.LogTrace($"trying connect to mqtt server({ConfigureMqttVM.DefaultIpAddress}:{ConfigureMqttVM.DefaultPort})...");
         }
     }
 }
