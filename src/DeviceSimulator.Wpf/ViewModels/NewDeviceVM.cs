@@ -69,6 +69,17 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
+        private string _deviceUriHint = "可点击右侧按钮生成";
+        public string DeviceUriHint
+        {
+            get => _deviceUriHint;
+            set
+            {
+                _deviceUriHint = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeviceUriHint)));
+            }
+        }
+
         private DeviceTypeVM? _selectedDeviceType;
         public DeviceTypeVM? SelectedDeviceType
         {
@@ -80,7 +91,18 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        
+        private string _deviceTypeHint = "若不存在请添加";
+        public string DeviceTypeHint
+        {
+            get => _deviceTypeHint;
+            set
+            {
+                _deviceTypeHint = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeviceTypeHint)));
+            }
+        }
+
+
 
         #endregion
 
@@ -92,13 +114,25 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void ApplyNewDevice(object? sender)
         {
-            if(SelectedDeviceType is null)
+            var typePass = SelectedDeviceType is not null;
+            var uriPass = !string.IsNullOrEmpty(DeviceUri);
+            if (!typePass)
             {
-                _logger.LogWarning("device type was not selected");
+                DeviceTypeHint = "未选择设备型号";
+            }
+            if (!uriPass)
+            {
+                DeviceUriHint = "未填写设备序列号";
+            }
+            if(!typePass || !uriPass)
+            {
+                return;
             }
             if(MainWindowVM.Devices.Any(d=>d.Uri == DeviceUri))
             {
                 _logger.LogWarning("device uri already exist");
+                DeviceUriHint = "当前序列号已存在";
+                return;
             }
             try
             {
