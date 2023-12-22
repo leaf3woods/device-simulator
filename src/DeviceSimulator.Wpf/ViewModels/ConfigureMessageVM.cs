@@ -1,5 +1,7 @@
 ﻿using DeviceSimulator.Domain.Entities.IotData;
 using DeviceSimulator.Domain.Utilities;
+using DeviceSimulator.Domain.ValueObjects.Message;
+using DeviceSimulator.Domain.ValueObjects.Message.Base;
 using DeviceSimulator.Domain.ValueObjects.Message.JsonMsg;
 using DeviceSimulator.Infrastructure.Logger;
 using DeviceSimulator.Wpf.Views;
@@ -82,7 +84,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             var message = SelectedProtocol switch
             {
                 Json => new VitalSignMattressJsonMsg(vital),
-                Binary => throw new NotImplementedException(),
+                Binary => (IotMessage)new VitalSignMattressBinMsg(vital),
                 _ => null!
             };
             MainWindowVM.Message = message;
