@@ -144,29 +144,29 @@ namespace DeviceSimulator.Wpf.ViewModels
             window?.Hide();
         }
 
-        public void ApplySettings(object? sender)
+        public async void ApplySettings(object? sender)
         {
-            var ipPass = string.IsNullOrEmpty(IpAddress);
+            var ipPass = !string.IsNullOrEmpty(IpAddress);
             var portPass = Port is not null && (Port>=0 && Port<=65536);
-            var usernamePass = string.IsNullOrEmpty(Username);
+            var usernamePass = !string.IsNullOrEmpty(Username);
 
-            if (ipPass)
+            if (!ipPass)
             {
                 IpAddress = "无效Ip地址";
             }
-            if(portPass)
+            if(!portPass)
             {
                 PortHint = "无效端口";
             }
-            if (usernamePass)
+            if (!usernamePass)
             {
                 UsernameHint = "无效用户名";
             }
             if(ipPass && portPass && usernamePass)
             {
-                _mqttExplorer.RestartAsync(IpAddress, Port!.Value, Username, Password);
                 var window = sender as ConfigureMqttWindow;
                 window?.Hide();
+                await _mqttExplorer.RestartAsync(IpAddress, Port!.Value, Username, Password);
             }
         }
         public void UseDefaultSettings(object? sender)
