@@ -30,7 +30,7 @@ namespace DeviceSimulator.Domain.ValueObjects.Message.JsonMsg
             {
                 var node = new JsonObject
                 {
-                    { "time", MsgTime },
+                    { "time", (ulong)(MsgTime-DateTime.UnixEpoch).TotalMilliseconds },
                     { "heart", IotData.Heart },
                     { "breath", IotData.Breath },
                     { "move", IotData.Move },

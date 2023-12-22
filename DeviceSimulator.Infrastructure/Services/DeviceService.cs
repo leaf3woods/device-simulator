@@ -131,7 +131,7 @@ namespace DeviceSimulator.Infrastructure.Services
                             .WithDirection(MqttDirection.Up)
                             .WithDeviceType(d.DeviceTypeCode)
                             .WithUri(d.Uri)
-                            .WithTag(MqttTag.State)
+                            .WithTag(MqttTag.Data)
                                 .Build(),
                         bytes);
                 });
@@ -149,7 +149,7 @@ namespace DeviceSimulator.Infrastructure.Services
                         .WithDirection(MqttDirection.Up)
                         .WithDeviceType(d.DeviceTypeCode)
                         .WithUri(d.Uri)
-                        .WithTag(MqttTag.State)
+                        .WithTag(MqttTag.Data)
                             .Build(),
                     message.AsFrame());
             });

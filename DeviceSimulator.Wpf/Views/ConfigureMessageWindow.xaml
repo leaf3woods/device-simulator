@@ -60,18 +60,13 @@
                                         ItemsSource="{Binding Protocols}" SelectedItem="{Binding SelectedProtocol}"/>
                                 <Border Margin="10,5" Grid.Row="1" CornerRadius="8" Background="LightBlue">
                                     <Border Margin="2" CornerRadius="8" Background="White">
-                                        <RichTextBox Margin="8,0"
+                                        <TextBox Margin="8,0"
                                         AcceptsReturn="True"
                                         md:HintAssist.Hint="请键入消息内容..."
                                         VerticalContentAlignment="Bottom"
-                                        Style="{StaticResource MaterialDesignRichTextBox}" 
-                                        VerticalAlignment="Center" Height="120">
-                                            <FlowDocument>
-                                                <Paragraph>
-                                                    <Run Text="{Binding TextBoxContent, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}" />
-                                                </Paragraph>
-                                            </FlowDocument>
-                                        </RichTextBox>
+                                        Style="{StaticResource MaterialDesignTextBox}" 
+                                        VerticalAlignment="Center" Height="120" Text="{Binding TextBoxContent, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}">
+                                        </TextBox>
                                     </Border>
                                 </Border>
                             </Grid>

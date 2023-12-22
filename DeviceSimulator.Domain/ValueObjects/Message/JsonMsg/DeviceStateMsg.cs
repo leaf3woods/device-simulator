@@ -32,7 +32,8 @@ namespace DeviceSimulator.Domain.ValueObjects.Message.JsonMsg
             {
                 var node = new JsonObject
                 {
-                    { "connected", MsgTime },
+                    { "time", (ulong)(MsgTime-DateTime.UnixEpoch).TotalMilliseconds},
+                    { "connected", IotData.Connected },
                     { "mac", IotData.Mac },
                     { "version", IotData.Version },
                 };
