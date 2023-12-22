@@ -208,13 +208,9 @@ namespace DeviceSimulator.Infrastructure.Services
             var exists = await _iotDbContext.Value.Devices
                 .Where(d => uris.Contains(d.Uri))
                 .ToArrayAsync();
-            if (exists.Length == devices.Length)
+            if (exists.Length != devices.Length)
             {
-                _logger.LogInformation("all devices[] are exist");
-            }
-            if (exists.Length == 0)
-            {
-                _logger.LogWarning("devices not exist");
+                _logger.LogInformation($"some devices[{exists.Length - exists.Length}] are not exist");
             }
             return exists;
         }
