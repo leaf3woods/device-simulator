@@ -51,8 +51,8 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>a4e5b4b6-cc70-47ab-9d0d-843ec32f4123</ProjectGuid>
-    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <NoWarn>$(NoWarn);NU1702</NoWarn>
