@@ -31,6 +31,8 @@ namespace DeviceSimulator.Wpf.ViewModels
         public RelayCommand ConfigureDeviceTypeCommand { get; set; } = null!;
         public RelayCommand DeleteDeviceTypeCommand { get; set; } = null!;
         public RelayCommand SendMessageCommand { get; set; } = null!;
+        public RelayCommand StopSendMessageCommand { get; set; } = null!;
+
         public RelayCommand SendOfflineCommand { get; set; } = null!;
         public RelayCommand SendOnlineCommand { get; set; } = null!;
 
@@ -65,6 +67,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             DeleteDeviceCommand = new RelayCommand() { ExecuteAction = DeleteDevice };
             ConfigureDeviceTypeCommand = new RelayCommand() { ExecuteAction = ConfigureDeviceType };
             SendMessageCommand = new RelayCommand() { ExecuteAction = SendMessage };
+            StopSendMessageCommand = new RelayCommand() { ExecuteAction = StopSendMessage };
             SendOfflineCommand = new RelayCommand() { ExecuteAction = SendOffline };
             SendOnlineCommand = new RelayCommand() { ExecuteAction = SendOnline };
 
@@ -111,6 +114,39 @@ namespace DeviceSimulator.Wpf.ViewModels
                 _selectedNewDevicesCount = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedNewDevicesCount)));
             }
+        }
+
+        private bool _autoSend;
+
+        public bool AutoSend
+        {
+            get => _autoSend;
+            set
+            {
+                _autoSend = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AutoSend)));
+            }
+        }
+
+        private bool _cancelSend;
+        public bool CancelSend
+        {
+            get => _cancelSend;
+            set
+            {
+                _cancelSend = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableSendButton)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableStopButton)));
+            }
+        }
+        public bool EnableSendButton
+        {
+            get => !AutoSend || _cancelSend;
+        }
+
+        public bool EnableStopButton
+        {
+            get => AutoSend && !_cancelSend;
         }
 
         private ObservableCollection<MetaLog> _logs;
@@ -190,6 +226,7 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void SendMessage(object? sender)
         {
+            CancelSend = false;
             //AppendNewHistoryMsg(0, ConfigureMessageVM.TemplateJson);
             try
             {
@@ -204,16 +241,24 @@ namespace DeviceSimulator.Wpf.ViewModels
                 {
                     case VitalSignMattressJsonMsg:
                         var json = (VitalSignMattressJsonMsg)Message;
-                        await _deviceService.SendJsonMessageAsync(json, targets);
-                        Logger.LogInformation("devices message send succeed");
-                        AppendNewHistoryMsg(targets.Length, json.Raw);
+                        while (AutoSend && !_cancelSend)
+                        {
+                            await _deviceService.SendJsonMessageAsync(json, targets);
+                            Logger.LogInformation("devices message send succeed");
+                            AppendNewHistoryMsg(targets.Length, json.Raw);
+                            await Task.Delay(1000);
+                        }
                         break;
                     case VitalSignMattressBinMsg:
                         var bin = (VitalSignMattressBinMsg)Message!;
-                        await _deviceService.SendBinaryMessageAsync(bin, targets);
-                        Logger.LogInformation("devices message send succeed");
-                        var plain = Convert.ToHexString(bin.FrameData);
-                        AppendNewHistoryMsg(targets.Length, plain);
+                        while (AutoSend && _cancelSend)
+                        {
+                            await _deviceService.SendBinaryMessageAsync(bin, targets);
+                            Logger.LogInformation("devices message send succeed");
+                            var plain = Convert.ToHexString(bin.FrameData);
+                            AppendNewHistoryMsg(targets.Length, plain);
+                            await Task.Delay(1000);
+                        }
                         break;
                     default: throw new ArgumentOutOfRangeException("message type not support");
                 }
@@ -222,6 +267,11 @@ namespace DeviceSimulator.Wpf.ViewModels
             {
                 Logger.LogError($"devices message send failed {ex}");
             }
+        }
+
+        public void StopSendMessage(object? sender)
+        {
+            CancelSend = true;
         }
 
         public async void SendOffline(object? sender)

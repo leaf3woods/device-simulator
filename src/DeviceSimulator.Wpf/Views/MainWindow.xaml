@@ -192,7 +192,7 @@
                                                 </Button.Content>
                                             </Button>
                                             <Border Width="5"/>
-                                            <Button Background="MediumPurple" Height="30" Width="85" 
+                                            <Button IsEnabled="{Binding EnableSendButton}" Background="MediumPurple" Height="30" Width="85" 
                                                 HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                                 Style="{DynamicResource buttonNormal}"
                                                 Command="{Binding SendMessageCommand}">
@@ -212,6 +212,11 @@
                                                             <CheckBox IsChecked="{Binding AutoSend}"/>
                                                         </StackPanel>
                                                     </Grid>
+                                                </Button.Content>
+                                            </Button>
+                                            <Button Style="{DynamicResource TextOnlyButton}" IsEnabled="{Binding EnableStopButton}" VerticalAlignment="Bottom" Command="{Binding StopSendMessageCommand}">
+                                                <Button.Content>
+                                                    <TextBlock Text="停止" FontSize="12" VerticalAlignment="Bottom" TextDecorations="Underline" />
                                                 </Button.Content>
                                             </Button>
                                         </StackPanel>
