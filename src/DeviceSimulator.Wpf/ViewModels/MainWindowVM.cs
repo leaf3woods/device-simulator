@@ -83,6 +83,22 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         #region property binding
 
+        private bool isAllItemsChecked;
+
+        public bool IsAllItemsChecked
+        {
+            get => isAllItemsChecked;
+            set
+            {
+                isAllItemsChecked = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(isAllItemsChecked)));
+                Parallel.ForEach(Devices, d =>
+                {
+                    d.IsChecked = value;
+                });
+            }
+        }
+
         private ObservableCollection<MetaLog> _logs;
         public ObservableCollection<MetaLog> Logs
         {

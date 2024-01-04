@@ -99,10 +99,11 @@
                                                     <DataGridCheckBoxColumn Binding="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
                                                         <DataGridCheckBoxColumn.Header>
                                                             <StackPanel Orientation="Horizontal">
-                                                                <!--<CheckBox HorizontalAlignment="Left" 
+                                                                <CheckBox HorizontalAlignment="Left" 
                                                                                       IsChecked="{Binding DataContext.IsAllItemsChecked ,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged
                                                                                                     ,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"/>
-                                                                            <TextBlock Text="全选" VerticalAlignment="Center"/>-->
+                                                                <Border Width="3"/>
+                                                                <TextBlock Text="全选" VerticalAlignment="Center"/>
                                                             </StackPanel>
                                                         </DataGridCheckBoxColumn.Header>
                                                     </DataGridCheckBoxColumn>
