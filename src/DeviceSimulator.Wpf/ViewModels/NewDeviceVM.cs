@@ -142,7 +142,7 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public async void ApplyNewDevice(object? sender)
         {
-            var typePass = SelectedDeviceType is not null;
+            var typePass = !string.IsNullOrEmpty(SelectedDeviceType?.Code);
             var uriPass = !string.IsNullOrEmpty(DeviceUri);
             if (!typePass)
             {
@@ -152,7 +152,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             {
                 DeviceUriHint = "未填写设备序列号";
             }
-            if(UriInputEnable && (!typePass || !uriPass))
+            if(!typePass || (!uriPass && UriInputEnable))
             {
                 return;
             }
