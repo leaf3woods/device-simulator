@@ -44,29 +44,38 @@
                 <Border Grid.Row="2" Background="White" CornerRadius="15">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="5*"/>
+                            <RowDefinition Height="7*"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
                         <Border Margin="5" Background="#F3F6F9" CornerRadius="15">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
-                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="6*"/>
                                 </Grid.RowDefinitions>
-                                <ComboBox Height="25" Width="150" 
-                                        md:HintAssist.Hint="选择协议"
-                                        md:HintAssist.HelperText="支持json，binary"
-                                        MaxDropDownHeight="100"
-                                        ItemsSource="{Binding Protocols}" SelectedItem="{Binding SelectedProtocol}"/>
-                                <Border Margin="10,5" Grid.Row="1" CornerRadius="8" Background="LightBlue">
-                                    <Border Margin="2" CornerRadius="8" Background="White">
-                                        <TextBox Margin="8,0"
-                                        AcceptsReturn="True"
-                                        md:HintAssist.Hint="请键入消息内容..."
-                                        VerticalContentAlignment="Bottom"
-                                        Style="{StaticResource MaterialDesignTextBox}" 
-                                        VerticalAlignment="Center" Height="120" Text="{Binding TextBoxContent, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}">
-                                        </TextBox>
+                                <StackPanel Margin="5" Grid.Row="0">
+                                    <CheckBox Content="随机发送"/>
+                                    <TextBlock Text=""/>
+                                </StackPanel>
+                                <Border Margin="10,5" Grid.Row="1" CornerRadius="8" Background="#FF37A0EA">
+                                    <Border Margin="1.5" CornerRadius="6" Background="White">
+                                        <StackPanel>
+                                            <ComboBox Height="25" Width="150" 
+                                                md:HintAssist.Hint="选择协议"
+                                                md:HintAssist.HelperText="支持json，binary"
+                                                MaxDropDownHeight="100"
+                                                ItemsSource="{Binding Protocols}" SelectedItem="{Binding SelectedProtocol}"/>
+                                            <Border Height="20"/>
+                                            <Border Margin="10,0" CornerRadius="10" Background="#F3F6F9">
+                                                <TextBox Margin="8,5" AcceptsReturn="True"
+                                                    md:HintAssist.Hint="请键入消息内容..."
+                                                    VerticalContentAlignment="Bottom"
+                                                    Style="{StaticResource MaterialDesignTextBox}" 
+                                                    VerticalAlignment="Center" Height="120" 
+                                                    Text="{Binding TextBoxContent, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}">
+                                                </TextBox>
+                                            </Border>
+                                        </StackPanel>
                                     </Border>
                                 </Border>
                             </Grid>

@@ -55,6 +55,39 @@ namespace DeviceSimulator.Wpf.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TextBoxContent)));
             }
         }
+
+        private int _randomSecondsMin = 60;
+        public int RandomSecondsMin
+        {
+            get => _randomSecondsMin;
+            set
+            {
+                _randomSecondsMin = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RandomSecondsMin)));
+            }
+        }
+
+        private int _randomSecondsMax = 3 * 60;
+        public int RandomSecondsMax
+        {
+            get => _randomSecondsMax;
+            set
+            {
+                _randomSecondsMax = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RandomSecondsMax)));
+            }
+        }
+
+        public bool _enableRandom;
+        public bool EnableRandom
+        {
+            get => _enableRandom;
+            set
+            {
+                _enableRandom = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableRandom)));
+            }
+        }
         #endregion
 
         public static string TemplateJson = JsonSerializer.Serialize(VitalSign.Default, Options.CustomJsonSerializerOptions);

@@ -59,14 +59,4 @@ namespace DeviceSimulator.Domain.ValueObjects.Message.JsonMsg
             };
         }
     }
-
-    public enum MattressState
-    {
-        Leave = 3, //离床
-        On = 4, //在床
-        Error = 5, //故障
-        Offline = 6, //离线
-        Occupy = 9,//传感器负荷
-        WeakSignal = 10 //信号弱
-    }
 }

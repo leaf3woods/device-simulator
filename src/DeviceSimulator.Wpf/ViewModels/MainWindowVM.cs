@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DeviceSimulator.Domain.Entities;
+using DeviceSimulator.Domain.Entities.IotData;
 using DeviceSimulator.Domain.Services;
 using DeviceSimulator.Domain.ValueObjects.Message;
 using DeviceSimulator.Domain.ValueObjects.Message.Base;
@@ -42,6 +43,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             NewDeviceWindow deviceWindow,
             NewDeviceVM newDeviceVM,
             ConfigureMessageWindow messageWindow,
+            ConfigureMessageVM messageVM,
             IDeviceService deviceService,
             IMapper mapper,
             ILoggerBox<MainWindowVM> logger,
@@ -54,6 +56,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             _deviceVM = newDeviceVM;
             _deviceTypeWindow = deviceTypeWindow;
             _messageWindow = messageWindow;
+            _messageVM = messageVM;
             _deviceService = deviceService;
             _mapper = mapper;
             Logger = logger;
@@ -77,6 +80,7 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         private readonly ConfigureMqttWindow _mqttWindow;
         private readonly ConfigureMessageWindow _messageWindow;
+        private readonly ConfigureMessageVM _messageVM;
         private readonly ConfigureDeviceTypeWindow _deviceTypeWindow;
         private readonly NewDeviceWindow _deviceWindow;
         private readonly NewDeviceVM _deviceVM;
@@ -235,6 +239,34 @@ namespace DeviceSimulator.Wpf.ViewModels
                 if (targets is null || targets.Length == 0)
                 {
                     Logger.LogWarning($"no devices was selected");
+                    return;
+                }
+                if (_messageVM.EnableRandom)
+                {
+                    while (AutoSend && !_cancelSend)
+                    {
+                        var delay = Random.Shared.Next(_messageVM.RandomSecondsMin, _messageVM.RandomSecondsMax);
+                        var json = new VitalSignMattressJsonMsg(new VitalSign
+                        {
+                            Heart = Random.Shared.Next(0, 90),
+                            Breath = Random.Shared.Next(0, 50),
+                            Move = Random.Shared.Next(0, 1),
+                            State = (Random.Shared.Next(0, 100) / 10) switch
+                            {
+                                0 or 1 or 2 => (float)MattressState.Leave,
+                                3 => (float)MattressState.WeakSignal,
+                                _ => (float)MattressState.On
+                            }
+                        });
+                        while (delay-- > 0 && !_cancelSend)
+                        {
+                            await _deviceService.SendJsonMessageAsync(json, targets);
+                            Logger.LogInformation("devices message send succeed");
+                            AppendNewHistoryMsg(targets.Length, json.Raw);
+                            await Task.Delay(1000);
+                        }
+                        delay = Random.Shared.Next(_messageVM.RandomSecondsMin, _messageVM.RandomSecondsMax);
+                    }
                     return;
                 }
                 switch (Message)
