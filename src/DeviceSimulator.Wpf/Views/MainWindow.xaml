@@ -126,24 +126,28 @@
                                         </Border>
 
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,5,10,5" Orientation="Horizontal">
-                                            <Button Background="CornflowerBlue" Height="30" Width="80"
+                                            <Button Background="CornflowerBlue" Height="30" Width="90"
                                                 HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                                 Style="{DynamicResource buttonNormal}"
                                                 Command="{Binding AddDeviceCommand}">
                                                 <Button.Content>
-                                                    <Grid Margin="2">
+                                                    <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="3*"/>
                                                             <ColumnDefinition Width="6*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Background="Transparent">
+                                                        <Border Margin="2" Grid.Column="0" Background="Transparent">
                                                             <Border BorderThickness="3" Background="#2B88C9" Height="20" Width="20" CornerRadius="5">
                                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/plus.png"/>
                                                             </Border>
                                                         </Border>
-                                                        <TextBlock Margin="5" Grid.Column="2" Text="Add" TextAlignment="Left" 
+                                                        <DockPanel Grid.Column="2" >
+                                                            <TextBlock Margin="5" Text="Add" TextAlignment="Left"
                                                                VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"
                                                                HorizontalAlignment="Center"/>
+                                                            <Border Width="2"/>
+                                                            <ComboBox Height="18" FontSize="9" Width="25" ItemsSource="{Binding Source={x:Static vm:MainWindowVM.NewDevicesCountOption}}" SelectedItem="{Binding SelectedNewDevicesCount}" />
+                                                        </DockPanel>
                                                     </Grid>
                                                 </Button.Content>
                                             </Button>
@@ -188,7 +192,7 @@
                                                 </Button.Content>
                                             </Button>
                                             <Border Width="5"/>
-                                            <Button Background="MediumPurple" Height="30" Width="80" 
+                                            <Button Background="MediumPurple" Height="30" Width="85" 
                                                 HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                                                 Style="{DynamicResource buttonNormal}"
                                                 Command="{Binding SendMessageCommand}">
@@ -203,7 +207,10 @@
                                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/notifwhite.png"/>
                                                             </Border>
                                                         </Border>
-                                                        <TextBlock Margin="5" Grid.Column="1" Text="Send" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                            <TextBlock Margin="5" Grid.Column="1" Text="Send" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                                            <CheckBox IsChecked="{Binding AutoSend}"/>
+                                                        </StackPanel>
                                                     </Grid>
                                                 </Button.Content>
                                             </Button>

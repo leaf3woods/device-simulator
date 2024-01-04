@@ -61,16 +61,16 @@
                                   md:HintAssist.HelperText="{Binding DeviceTypeHint}"  MaxDropDownHeight="100" />
                                 <Border Height="20"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBox Width="100" md:HintAssist.Hint="生成设备Uri..." 
+                                    <TextBox IsEnabled="{Binding UriInputEnable}" Width="100" md:HintAssist.Hint="生成设备Uri..." 
                                             Text="{Binding DeviceUri}" 
                                             md:HintAssist.HelperText="{Binding DeviceUriHint}"
                                             IsReadOnly="False"/>
                                     <Border Width="10"/>
-                                    <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource singleButtonTemplate}"
+                                    <Button IsEnabled="{Binding UriInputEnable}" Grid.Column="1" Background="#e7f3fc" BorderThickness="0" Style="{DynamicResource singleButtonTemplate}"
                                             Command="{Binding GenerateUriCommand}" 
                                             CommandParameter="{Binding RelativeSource= {RelativeSource Mode=Self}}">
                                         <Button.Content>
-                                            <Border BorderThickness="3" Background="#e7f3fc" Height="25" Width="25" CornerRadius="5">
+                                            <Border BorderThickness="3" Background="Transparent" Height="25" Width="25" CornerRadius="5">
                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/plus.png"/>
                                             </Border>
                                         </Button.Content>
@@ -99,7 +99,7 @@
                                                 <Image Width="20" Stretch="Uniform" Source="/Assets/right.png"/>
                                             </Border>
                                         </Border>
-                                        <TextBlock Margin="5" Grid.Column="1" Text="应用" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="12"/>
+                                        <TextBlock Margin="5" Grid.Column="1" Text="{Binding ApplyCount}" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="10"/>
                                     </Grid>
                                 </Button.Content>
                             </Button>

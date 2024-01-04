@@ -38,6 +38,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             ConfigureMqttWindow mqttWindow,
             ConfigureDeviceTypeWindow deviceTypeWindow,
             NewDeviceWindow deviceWindow,
+            NewDeviceVM newDeviceVM,
             ConfigureMessageWindow messageWindow,
             IDeviceService deviceService,
             IMapper mapper,
@@ -48,6 +49,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         {
             _mqttWindow = mqttWindow;
             _deviceWindow = deviceWindow;
+            _deviceVM = newDeviceVM;
             _deviceTypeWindow = deviceTypeWindow;
             _messageWindow = messageWindow;
             _deviceService = deviceService;
@@ -74,6 +76,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         private readonly ConfigureMessageWindow _messageWindow;
         private readonly ConfigureDeviceTypeWindow _deviceTypeWindow;
         private readonly NewDeviceWindow _deviceWindow;
+        private readonly NewDeviceVM _deviceVM;
         private readonly IDeviceService _deviceService;
         private readonly IMapper _mapper;
         private readonly IMqttExplorer _mqttExplorer;
@@ -83,19 +86,30 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         #region property binding
 
-        private bool isAllItemsChecked;
+        private bool _isAllItemsChecked;
 
         public bool IsAllItemsChecked
         {
-            get => isAllItemsChecked;
+            get => _isAllItemsChecked;
             set
             {
-                isAllItemsChecked = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(isAllItemsChecked)));
+                _isAllItemsChecked = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsAllItemsChecked)));
                 Parallel.ForEach(Devices, d =>
                 {
                     d.IsChecked = value;
                 });
+            }
+        }
+
+        private int _selectedNewDevicesCount = 1;
+        public int SelectedNewDevicesCount
+        {
+            get => _selectedNewDevicesCount;
+            set
+            {
+                _selectedNewDevicesCount = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedNewDevicesCount)));
             }
         }
 
@@ -131,6 +145,8 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public static ObservableCollection<DeviceTypeVM> DeviceTypes { get; set; } = [];
 
+        public static ObservableCollection<int> NewDevicesCountOption { get; } = [1, 5, 10];
+
         #endregion
 
         private int _lastMessageLength;
@@ -156,6 +172,7 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public void AddDevice(object? sender)
         {
+            _deviceVM.NewDeviceCount = SelectedNewDevicesCount;
             _deviceWindow.ShowDialog();
             _deviceWindow.Activate();
         }

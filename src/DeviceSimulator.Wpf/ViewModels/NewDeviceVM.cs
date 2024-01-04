@@ -69,6 +69,15 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
+        public bool UriInputEnable
+        {
+            get => NewDeviceCount switch
+            {
+                0 or 1 => true,
+                _ => false
+            };
+        }
+
         private string _deviceUriHint = "可点击右侧按钮生成";
         public string DeviceUriHint
         {
@@ -102,7 +111,26 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
+        private int _newDeviceCount = 1;
 
+        public int NewDeviceCount
+        {
+            get => _newDeviceCount;
+            set
+            {
+                _newDeviceCount = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ApplyCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UriInputEnable)));
+                if (!UriInputEnable) DeviceUriHint = "";
+                else DeviceUriHint = "可点击右侧按钮生成";
+            }
+        }
+
+
+        public string ApplyCount
+        {
+            get => $"应用[{_newDeviceCount}]";
+        }
 
         #endregion
 
@@ -124,11 +152,11 @@ namespace DeviceSimulator.Wpf.ViewModels
             {
                 DeviceUriHint = "未填写设备序列号";
             }
-            if(!typePass || !uriPass)
+            if(UriInputEnable && (!typePass || !uriPass))
             {
                 return;
             }
-            if(MainWindowVM.Devices.Any(d=>d.Uri == DeviceUri))
+            if(UriInputEnable && MainWindowVM.Devices.Any(d=>d.Uri == DeviceUri))
             {
                 _logger.LogWarning("device uri already exist");
                 DeviceUriHint = "当前序列号已存在";
@@ -136,18 +164,24 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
             try
             {
-                var newDevice = new DeviceGridVM
+                var targets = new List<Device>();
+                for(var i = 0; i<NewDeviceCount; i++)
                 {
-                    IsChecked = false,
-                    Uri = DeviceUri,
-                    Name = DeviceName,
-                    DeviceTypeCode = SelectedDeviceType!.Code
-                };
-                MainWindowVM.Devices.Add(newDevice);
-                var target = _mapper.Map<Device>(newDevice);
+                    GenerateUri(null);
+                    var newDevice = new DeviceGridVM
+                    {
+                        IsChecked = false,
+                        Uri = DeviceUri,
+                        Name = DeviceName,
+                        DeviceTypeCode = SelectedDeviceType!.Code
+                    };
+                    MainWindowVM.Devices.Add(newDevice);
+                    targets.Add(_mapper.Map<Device>(newDevice));
+                }
+
                 var window = sender as NewDeviceWindow;
                 window?.Hide();
-                var count = await _deviceService.CreateDevicesAsync(target);
+                var count = await _deviceService.CreateDevicesAsync(targets.ToArray());
                 if (count > 0)
                 {
                     _logger.LogInformation($"apply ({count}) device to database succeed");
