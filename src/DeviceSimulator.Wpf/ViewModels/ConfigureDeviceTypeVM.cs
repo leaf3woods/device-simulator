@@ -58,11 +58,11 @@ namespace DeviceSimulator.Wpf.ViewModels
                 var window = sender as ConfigureDeviceTypeWindow;
                 window?.Hide();
                 await _deviceService.UpdateOrAddDeviceTypesAsync([.. targets]);
-                _logger.LogInformation($"apply device types change succeed");
+                await _logger.LogInformationAsync($"apply device types change succeed");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"apply device types change failed {ex}");
+                await _logger.LogErrorAsync($"apply device types change failed {ex}");
             }
         }
 
@@ -89,11 +89,11 @@ namespace DeviceSimulator.Wpf.ViewModels
                     MainWindowVM.DeviceTypes.Remove(type);
                 }
                 await _deviceService.DeleteDeviceTypesAsync(codes);
-                _logger.LogError($"delete selected device types succeed");
+                await _logger.LogErrorAsync($"delete selected device types succeed");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"delete selected device types failed {ex}");
+                await _logger.LogErrorAsync($"delete selected device types failed {ex}");
             }
         }
     }

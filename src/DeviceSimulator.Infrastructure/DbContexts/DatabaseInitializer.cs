@@ -25,12 +25,12 @@ namespace DeviceSimulator.Infrastructure.DbContexts
             {
                 await context.Database.MigrateAsync();
                 var count = await context.SaveChangesAsync();
-                _logger.LogInformation($"database migrate succeed, with {count} changes");
+                //await _logger.LogInformationAsync($"database migrate succeed, with {count} changes");
             }
             catch (Exception ex)
             {
                 await context.Database.EnsureCreatedAsync();
-                _logger.LogError($"database initialize failed: {ex}");
+                //await _logger.LogErrorAsync($"database initialize failed: {ex}");
             }
         }
     }

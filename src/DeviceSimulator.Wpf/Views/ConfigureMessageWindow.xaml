@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceSimulator.Wpf.Views"
         mc:Ignorable="d"
-        Title="ConfigureMessageWindow" Height="330" Width="250" AllowsTransparency="True"
+        Title="ConfigureMessageWindow" Height="350" Width="260" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" WindowStyle="None" Background="Transparent">
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" Color="#FF858484" Direction="-45" ShadowDepth="3"/>
@@ -15,7 +15,7 @@
         <Border Background="#FF37A0EA" CornerRadius="15">
             <Grid Margin="3">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="37"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid>
@@ -51,15 +51,23 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
-                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="4.7*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Margin="5" Grid.Row="0">
-                                    <CheckBox Content="随机发送"/>
-                                    <TextBlock Text=""/>
-                                </StackPanel>
+                                <WrapPanel VerticalAlignment="Center" Grid.Row="0">
+                                    <Border Width="15"/>
+                                    <CheckBox Content="随机发送" IsChecked="{Binding EnableRandom}" FontSize="12.5"/>
+                                    <Border Width="5"/>
+                                    <Slider IsEnabled="{Binding EnableRandom}" Minimum="0" Maximum="600" Width="85" 
+                                                IsSnapToTickEnabled="True" ClipToBounds="False"
+                                                IsSelectionRangeEnabled="True" SelectionStart="60" SelectionEnd="600"
+                                                SmallChange="30" TickFrequency="60" TickPlacement="BottomRight" LargeChange="30" Interval="30" Value="{Binding RandomSeconds}"/>
+                                    <Border Width="5"/>
+                                    <TextBox IsEnabled="{Binding EnableRandom}" Text="{Binding RandomSeconds}" Width="28"/>
+                                </WrapPanel>
                                 <Border Margin="10,5" Grid.Row="1" CornerRadius="8" Background="#FF37A0EA">
                                     <Border Margin="1.5" CornerRadius="6" Background="White">
-                                        <StackPanel>
+                                        <StackPanel IsEnabled="{Binding ShowCustomBox}">
+                                            <Border Height="5"/>
                                             <ComboBox Height="25" Width="150" 
                                                 md:HintAssist.Hint="选择协议"
                                                 md:HintAssist.HelperText="支持json，binary"

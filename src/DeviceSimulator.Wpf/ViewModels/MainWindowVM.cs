@@ -78,6 +78,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             StartMqttAsync();
         }
 
+        private static readonly object _lockObj = new ();
+
         private readonly ConfigureMqttWindow _mqttWindow;
         private readonly ConfigureMessageWindow _messageWindow;
         private readonly ConfigureMessageVM _messageVM;
@@ -238,34 +240,38 @@ namespace DeviceSimulator.Wpf.ViewModels
                 var targets = _mapper.Map<IEnumerable<Device>>(devices).ToArray();
                 if (targets is null || targets.Length == 0)
                 {
-                    Logger.LogWarning($"no devices was selected");
+                    await Logger.LogWarningAsync($"no devices was selected");
+                    CancelSend = true;
                     return;
                 }
                 if (_messageVM.EnableRandom)
                 {
                     while (AutoSend && !_cancelSend)
                     {
-                        var delay = Random.Shared.Next(_messageVM.RandomSecondsMin, _messageVM.RandomSecondsMax);
-                        var json = new VitalSignMattressJsonMsg(new VitalSign
+                        await Parallel.ForEachAsync(targets, async (target, _) =>
                         {
-                            Heart = Random.Shared.Next(0, 90),
-                            Breath = Random.Shared.Next(0, 50),
-                            Move = Random.Shared.Next(0, 1),
-                            State = (Random.Shared.Next(0, 100) / 10) switch
+                            var delay = Random.Shared.Next(_messageVM.RandomSeconds, _messageVM.RandomSeconds + 3 * 60);
+                            await Logger.LogInformationAsync($"send message in interval: {delay}s");
+                            var json = new VitalSignMattressJsonMsg(new VitalSign
                             {
-                                0 or 1 or 2 => (float)MattressState.Leave,
-                                3 => (float)MattressState.WeakSignal,
-                                _ => (float)MattressState.On
+                                Heart = Random.Shared.Next(0, 90),
+                                Breath = Random.Shared.Next(0, 50),
+                                Move = Random.Shared.Next(0, 1),
+                                State = (Random.Shared.Next(0, 100) / 10) switch
+                                {
+                                    0 or 1 or 2 => (float)MattressState.Leave,
+                                    3 => (float)MattressState.WeakSignal,
+                                    _ => (float)MattressState.On
+                                }
+                            });
+                            while (delay-- >= 0 && !_cancelSend)
+                            {
+                                await _deviceService.SendJsonMessageAsync(json, target);
+                                //await Logger.LogInformationAsync($"device[{target.Uri}] message send succeed");
+                                AppendNewHistoryMsg(1, json.Raw, false);
+                                await Task.Delay(1000, _);
                             }
                         });
-                        while (delay-- > 0 && !_cancelSend)
-                        {
-                            await _deviceService.SendJsonMessageAsync(json, targets);
-                            Logger.LogInformation("devices message send succeed");
-                            AppendNewHistoryMsg(targets.Length, json.Raw);
-                            await Task.Delay(1000);
-                        }
-                        delay = Random.Shared.Next(_messageVM.RandomSecondsMin, _messageVM.RandomSecondsMax);
                     }
                     return;
                 }
@@ -276,7 +282,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                         while (AutoSend && !_cancelSend)
                         {
                             await _deviceService.SendJsonMessageAsync(json, targets);
-                            Logger.LogInformation("devices message send succeed");
+                            await Logger.LogInformationAsync("devices message send succeed");
                             AppendNewHistoryMsg(targets.Length, json.Raw);
                             await Task.Delay(1000);
                         }
@@ -286,7 +292,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                         while (AutoSend && _cancelSend)
                         {
                             await _deviceService.SendBinaryMessageAsync(bin, targets);
-                            Logger.LogInformation("devices message send succeed");
+                            await Logger.LogInformationAsync("devices message send succeed");
                             var plain = Convert.ToHexString(bin.FrameData);
                             AppendNewHistoryMsg(targets.Length, plain);
                             await Task.Delay(1000);
@@ -297,7 +303,8 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
             catch(Exception ex)
             {
-                Logger.LogError($"devices message send failed {ex}");
+                await Logger.LogErrorAsync($"devices message send failed {ex}");
+                CancelSend = true;
             }
         }
 
@@ -314,15 +321,15 @@ namespace DeviceSimulator.Wpf.ViewModels
                 var targets = _mapper.Map<IEnumerable<Device>>(devices).ToArray();
                 if (targets is null || targets.Length == 0)
                 {
-                    Logger.LogWarning($"no devices was selected");
+                    await Logger.LogWarningAsync($"no devices was selected");
                     return;
                 }
                 await _deviceService.SendOnlineAsync(targets);
-                Logger.LogInformation($"devices({targets.Length}) offline succeed");
+                await Logger.LogInformationAsync($"devices({targets.Length}) offline succeed");
             }
             catch(Exception ex)
             {
-                Logger.LogError($"devices offline failed {ex}");
+                await Logger.LogErrorAsync($"devices offline failed {ex}");
             }
         }
 
@@ -334,15 +341,15 @@ namespace DeviceSimulator.Wpf.ViewModels
                 var targets = _mapper.Map<IEnumerable<Device>>(devices).ToArray();
                 if (targets is null || targets.Length == 0)
                 {
-                    Logger.LogWarning($"no devices was selected");
+                    await Logger.LogWarningAsync($"no devices was selected");
                     return;
                 }
                 await _deviceService.SendOfflineAsync(targets);
-                Logger.LogInformation($"devices({targets.Length}) online succeed");
+                await Logger.LogInformationAsync($"devices({targets.Length}) online succeed");
             }
             catch (Exception ex)
             {
-                Logger.LogError($"devices online failed {ex}");
+                await Logger.LogErrorAsync($"devices online failed {ex}");
             }
         }
 
@@ -381,19 +388,22 @@ namespace DeviceSimulator.Wpf.ViewModels
             await _mqttExplorer.StartAsync(
                 ConfigureMqttVM.DefaultIpAddress, ConfigureMqttVM.DefaultPort,
                 ConfigureMqttVM.DefaultUsername, ConfigureMqttVM.DefaultPassword);
-            Logger.LogTrace($"trying connect to mqtt server({ConfigureMqttVM.DefaultIpAddress}:{ConfigureMqttVM.DefaultPort})...");
+            await Logger.LogTraceAsync($"trying connect to mqtt server({ConfigureMqttVM.DefaultIpAddress}:{ConfigureMqttVM.DefaultPort})...");
         }
 
-        private void AppendNewHistoryMsg(int count, string? msg)
+        private void AppendNewHistoryMsg(int count, string? msg, bool remove = true)
         {
-            if (_lastMessageLength != 0)
+            lock (_lockObj)
             {
-                MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
+                if (_lastMessageLength != 0 && remove)
+                {
+                    MessageHistoryBuilder.Remove(MessageHistoryBuilder.Length - _lastMessageLength, _lastMessageLength);
+                }
+                MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T} [{count}] devs:");
+                MessageHistoryBuilder.AppendLine(msg);
+                MessageHistoryBuilder.Append(string.Empty);
+                _lastMessageLength = msg?.Length + 2 ?? 0;
             }
-            MessageHistoryBuilder.AppendLine($"{TimeOnly.FromDateTime(DateTime.Now):T} [{count}] devs:");
-            MessageHistoryBuilder.AppendLine(msg);
-            MessageHistoryBuilder.Append(string.Empty);
-            _lastMessageLength = msg?.Length + 2 ?? 0;
         }
     }
 }

@@ -56,25 +56,14 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
         }
 
-        private int _randomSecondsMin = 60;
-        public int RandomSecondsMin
+        private int _randomSeconds = 60;
+        public int RandomSeconds
         {
-            get => _randomSecondsMin;
+            get => _randomSeconds;
             set
             {
-                _randomSecondsMin = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RandomSecondsMin)));
-            }
-        }
-
-        private int _randomSecondsMax = 3 * 60;
-        public int RandomSecondsMax
-        {
-            get => _randomSecondsMax;
-            set
-            {
-                _randomSecondsMax = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RandomSecondsMax)));
+                _randomSeconds = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RandomSeconds)));
             }
         }
 
@@ -86,7 +75,13 @@ namespace DeviceSimulator.Wpf.ViewModels
             {
                 _enableRandom = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableRandom)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowCustomBox)));
             }
+        }
+
+        public bool ShowCustomBox
+        {
+            get => !_enableRandom;
         }
         #endregion
 
@@ -102,16 +97,23 @@ namespace DeviceSimulator.Wpf.ViewModels
 
         public void ApplyMessageSettings(object? sender)
         {
+            var window = sender as ConfigureMessageWindow;
+            if (EnableRandom)
+            {
+                window?.Hide();
+                _logger.LogInformationAsync("random message enabled");
+                return;
+            }
             if (string.IsNullOrEmpty(_textBoxContent))
             {
-                _logger.LogWarning("text box is empty");
+                _logger.LogWarningAsync("text box is empty");
                 return;
             }
 
             var vital = JsonSerializer.Deserialize<VitalSign>(_textBoxContent, Options.CustomJsonSerializerOptions);
             if (vital is null)
             {
-                _logger.LogWarning("json format error");
+                _logger.LogWarningAsync("json format error");
                 return;
             }
             var message = SelectedProtocol switch
@@ -121,8 +123,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                 _ => null!
             };
             MainWindowVM.Message = message;
-            _logger.LogInformation("message set succeed!");
-            var window = sender as ConfigureMessageWindow;
+            _logger.LogInformationAsync("message set succeed!");
             window?.Hide();
         }
         public void UseDefaultMessageSettings(object? sender)

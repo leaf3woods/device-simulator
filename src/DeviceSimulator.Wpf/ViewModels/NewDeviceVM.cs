@@ -158,7 +158,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             }
             if(UriInputEnable && MainWindowVM.Devices.Any(d=>d.Uri == DeviceUri))
             {
-                _logger.LogWarning("device uri already exist");
+                await _logger.LogWarningAsync("device uri already exist");
                 DeviceUriHint = "当前序列号已存在";
                 return;
             }
@@ -184,16 +184,16 @@ namespace DeviceSimulator.Wpf.ViewModels
                 var count = await _deviceService.CreateDevicesAsync(targets.ToArray());
                 if (count > 0)
                 {
-                    _logger.LogInformation($"apply ({count}) device to database succeed");
+                    await _logger.LogInformationAsync($"apply ({count}) device to database succeed");
                 }
                 else
                 {
-                    _logger.LogWarning($"apply ({count}) device to database succeed");
+                    await _logger.LogWarningAsync($"apply ({count}) device to database succeed");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"apply new device failed {ex}");
+                await _logger.LogErrorAsync($"apply new device failed {ex}");
             }
         }
 
@@ -209,7 +209,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                 maxUri++;
             }
             DeviceUri = $"{maxUri}";
-            _logger.LogTrace($"device uri generated: {DeviceUri}");
+            _logger.LogTraceAsync($"device uri generated: {DeviceUri}");
         }
     }
 }

@@ -38,10 +38,10 @@ namespace DeviceSimulator
                 options.RegisterAssemblyModules(Assembly.GetExecutingAssembly()))
                 .Build();
             var init = app.Services.GetRequiredService<DatabaseInitializer>();
-            init?.Initialize().Wait();
             //  若要注入main window, 需要在app.xaml中删除startup uri, 由host通过依赖注入获取窗口并启动
             var mainWindow = app.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
+            init?.Initialize().Wait();
         }
     }
 }

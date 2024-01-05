@@ -20,12 +20,12 @@ namespace DeviceSimulator.Infrastructure.Mqtt
             _mqttClient = mqttFactory.CreateManagedMqttClient();
             _mqttClient.DisconnectedAsync += _ =>
             {
-                _logger.LogError("mqtt disconnected");
+                _logger.LogErrorAsync("mqtt disconnected");
                 return Task.CompletedTask;
             };
             _mqttClient.ConnectedAsync += _ =>
             {
-                _logger.LogInformation("mqtt connected");
+                _logger.LogInformationAsync("mqtt connected");
                 return Task.CompletedTask;
             };
                

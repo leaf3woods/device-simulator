@@ -11,12 +11,12 @@ namespace DeviceSimulator.Infrastructure.Logger
     {
         ObservableCollection<MetaLog> Logs { get; }
 
-        void LogTrace(string message);
+        Task LogTraceAsync(string message);
 
-        void LogInformation(string message);
+        Task LogInformationAsync(string message);
 
-        void LogWarning(string message);
+        Task LogWarningAsync(string message);
 
-        void LogError(string message);
+        Task LogErrorAsync(string message);
     }
 }

@@ -24,7 +24,7 @@ namespace DeviceSimulator.Wpf.Logger
             get => _logs;
         }
 
-        public void LogTrace(string message)
+        public async Task LogTraceAsync(string message)
         {
             var meta = new MetaLog
             {
@@ -33,10 +33,10 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Trace
             };
-            LogWithMeta(meta);
+            await LogWithMeta(meta);
         }
 
-        public void LogInformation(string message)
+        public async Task LogInformationAsync(string message)
         {
             var meta = new MetaLog
             {
@@ -45,10 +45,10 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Information
             };
-            LogWithMeta(meta);
+            await LogWithMeta(meta);
         }
 
-        public void LogWarning(string message)
+        public async Task LogWarningAsync(string message)
         {
             var meta = new MetaLog
             {
@@ -57,10 +57,10 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Warning
             };
-            LogWithMeta(meta);
+            await LogWithMeta(meta);
         }
 
-        public void LogError(string message)
+        public async Task LogErrorAsync(string message)
         {
             var meta = new MetaLog
             {
@@ -69,12 +69,12 @@ namespace DeviceSimulator.Wpf.Logger
                 Content = message,
                 Level = LogLevel.Error
             };
-            LogWithMeta(meta);
+            await LogWithMeta(meta);
         }
 
-        private void LogWithMeta(MetaLog meta)
+        private async Task LogWithMeta(MetaLog meta)
         {
-            Application.Current.Dispatcher.InvokeAsync((Action)(() =>
+            await Application.Current.Dispatcher.InvokeAsync((Action)(() =>
             {
                 if (_logs.Count == _configuration.MaxLine)
                 {

@@ -61,7 +61,7 @@ namespace DeviceSimulator.Infrastructure.Services
             var targets = devices.Where(d => !existUris.Contains(d.Uri)).ToArray();
             if(devices.Length != targets.Length)
             {
-                _logger.LogWarning("some devices exist, skip");
+                await _logger.LogWarningAsync("some devices exist, skip");
             }
             await _iotDbContext.Value.Devices.AddRangeAsync(targets);
             return await _iotDbContext.Value.SaveChangesAsync();
@@ -122,8 +122,21 @@ namespace DeviceSimulator.Infrastructure.Services
             }
             else
             {
-                var exists = await SelectExistDevice(devices);
                 var bytes = Encoding.UTF8.GetBytes(message.Raw!);
+                if (devices.Length == 1)
+                {
+                    var device = devices[0];
+                    await _mqttExplorer.PublishAsync(
+                        IotTopicBuilder.CreateBuilder()
+                            .WithDirection(MqttDirection.Up)
+                            .WithDeviceType(device.DeviceTypeCode)
+                            .WithUri(device.Uri)
+                            .WithTag(MqttTag.Data)
+                                .Build(),
+                        bytes);
+                    return;
+                }
+                var exists = await SelectExistDevice(devices);
                 await Parallel.ForEachAsync(exists, async (d, _) =>
                 {
                     await _mqttExplorer.PublishAsync(
@@ -153,7 +166,7 @@ namespace DeviceSimulator.Infrastructure.Services
                             .Build(),
                     message.AsFrame());
             });
-            _logger.LogInformation($"device send binary message succeed");
+            await _logger.LogInformationAsync($"device send binary message succeed");
         }
 
         public async Task SendOfflineAsync(params Device[] devices)
@@ -176,7 +189,7 @@ namespace DeviceSimulator.Infrastructure.Services
                             .Build(),
                     bytes);
             });
-            _logger.LogInformation($"device offline succeed");
+            await _logger.LogInformationAsync($"device offline succeed");
         }
 
         public async Task SendOnlineAsync(params Device[] devices)
@@ -199,7 +212,7 @@ namespace DeviceSimulator.Infrastructure.Services
                             .Build(),
                     bytes);
             });
-            _logger.LogInformation($"device online succeed");
+            await _logger.LogInformationAsync($"device online succeed");
         }
 
         private async Task<IEnumerable<Device>> SelectExistDevice(params Device[] devices)
@@ -210,7 +223,7 @@ namespace DeviceSimulator.Infrastructure.Services
                 .ToArrayAsync();
             if (exists.Length != devices.Length)
             {
-                _logger.LogInformation($"some devices[{exists.Length - exists.Length}] are not exist");
+                await _logger.LogInformationAsync($"some devices[{exists.Length - exists.Length}] are not exist");
             }
             return exists;
         }
