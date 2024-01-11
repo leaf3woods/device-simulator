@@ -15,6 +15,7 @@
     <None Remove="Assets\cat.png" />
     <None Remove="Assets\closewhite.png" />
     <None Remove="Assets\cloud.png" />
+    <None Remove="Assets\minimize.png" />
     <None Remove="Assets\notifwhite.png" />
     <None Remove="Assets\play.png" />
     <None Remove="Assets\plus.png" />
@@ -58,6 +59,7 @@
     <Resource Include="Assets\cat.png" />
     <Resource Include="Assets\closewhite.png" />
     <Resource Include="Assets\cloud.png" />
+    <Resource Include="Assets\minimize.png" />
     <Resource Include="Assets\notifwhite.png" />
     <Resource Include="Assets\play.png" />
     <Resource Include="Assets\plus.png" />

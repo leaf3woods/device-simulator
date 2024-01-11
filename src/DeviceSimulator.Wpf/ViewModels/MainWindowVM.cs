@@ -25,6 +25,7 @@ namespace DeviceSimulator.Wpf.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public RelayCommand QuitAppCommand { get; set; } = null!;
+        public RelayCommand MinimizeAppCommand { get; set; } = null!;
         public RelayCommand ConfigureMqttCommand { get; set; } = null!;
         public RelayCommand ConfigureMessageCommand { get; set; } = null!;
         public RelayCommand AddDeviceCommand { get; set; } = null!;
@@ -64,6 +65,7 @@ namespace DeviceSimulator.Wpf.ViewModels
             _mqttExplorer = mqttExplorer;
 
             QuitAppCommand = new RelayCommand() { ExecuteAction = QuitApp };
+            MinimizeAppCommand = new RelayCommand() { ExecuteAction = MinimizeApp };
             ConfigureMqttCommand = new RelayCommand() { ExecuteAction = ConfigureMqtt };
             ConfigureMessageCommand = new RelayCommand() { ExecuteAction = ConfigureMessage };
             AddDeviceCommand = new RelayCommand() { ExecuteAction = AddDevice };
@@ -200,6 +202,12 @@ namespace DeviceSimulator.Wpf.ViewModels
             Application.Current.Shutdown();
         }
 
+        public void MinimizeApp(object? sender)
+        {
+            var mainWindow = sender as MainWindow;
+            mainWindow!.WindowState = WindowState.Minimized;
+        }
+
         public void ConfigureMqtt(object? sender)
         {
             _mqttWindow.ShowDialog();
@@ -324,7 +332,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                     await Logger.LogWarningAsync($"no devices was selected");
                     return;
                 }
-                await _deviceService.SendOnlineAsync(targets);
+                await _deviceService.SendOfflineAsync(targets);
                 await Logger.LogInformationAsync($"devices({targets.Length}) offline succeed");
             }
             catch(Exception ex)
@@ -344,7 +352,7 @@ namespace DeviceSimulator.Wpf.ViewModels
                     await Logger.LogWarningAsync($"no devices was selected");
                     return;
                 }
-                await _deviceService.SendOfflineAsync(targets);
+                await _deviceService.SendOnlineAsync(targets);
                 await Logger.LogInformationAsync($"devices({targets.Length}) online succeed");
             }
             catch (Exception ex)

@@ -21,9 +21,9 @@
                 </Grid.ColumnDefinitions>
                 <Grid MouseLeftButtonDown ="WindowHeadDragMove" Grid.Column="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="15*"/>
-                        <RowDefinition Height="100*"/>
-                        <RowDefinition Height="15*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="20*"/>
+                        <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Rectangle Grid.Row="0" Height="35" Width="35" RadiusX="10" RadiusY="10" VerticalAlignment="Bottom">
                         <Rectangle.Fill>
@@ -51,6 +51,13 @@
                         </Button>
                     </WrapPanel>
                     <WrapPanel Grid.Row="2" HorizontalAlignment="Center">
+                        <Button Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
+                            Command="{Binding MinimizeAppCommand}" 
+                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
+                            <Button.Content>
+                                <Image Source="/Assets/minimize.png" Stretch="Uniform" Width="20"/>
+                            </Button.Content>
+                        </Button>
                         <Button Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}"
                             Command="{Binding QuitAppCommand}" 
                             CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor ,AncestorType={x:Type Window}}}">
