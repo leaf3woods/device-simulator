@@ -198,6 +198,8 @@ namespace DeviceSimulator.Infrastructure.Services
             var state = new DeviceState
             {
                 Connected = 1,
+                Version = "0.0.1",
+                Mac = "unknown",
             };
             var offline = new DeviceStateMsg(state);
             var bytes = Encoding.UTF8.GetBytes(offline.Raw!);
