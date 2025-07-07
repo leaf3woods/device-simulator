@@ -18,17 +18,14 @@ namespace DeviceSimulator.Infrastructure.Mqtt
             _logger = logger;
             var mqttFactory = new MqttFactory();
             _mqttClient = mqttFactory.CreateManagedMqttClient();
-            _mqttClient.DisconnectedAsync += _ =>
+            _mqttClient.DisconnectedAsync += async _ =>
             {
-                _logger.LogErrorAsync("mqtt disconnected");
-                return Task.CompletedTask;
+                await _logger.LogErrorAsync("mqtt disconnected");
             };
-            _mqttClient.ConnectedAsync += _ =>
+            _mqttClient.ConnectedAsync += async _ =>
             {
-                _logger.LogInformationAsync("mqtt connected");
-                return Task.CompletedTask;
+                await _logger.LogInformationAsync("mqtt connected");
             };
-               
         }
 
         public async Task StartAsync(string server, int port, string username, string password)
